@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\user\\Documents\\BrazilBurgerProject\\BrazilBurgerC#\\BrazilBurgerWebClient\\BrazilBurgerWebClient.csproj": {}
+    "C:\\Users\\user\\Documents\\BrazilBurger\\BrazilBurgerC#\\BrazilBurgerWebClient\\BrazilBurgerWebClient.csproj": {}
   },
   "projects": {
-    "C:\\Users\\user\\Documents\\BrazilBurgerProject\\BrazilBurgerC#\\BrazilBurgerWebClient\\BrazilBurgerWebClient.csproj": {
+    "C:\\Users\\user\\Documents\\BrazilBurger\\BrazilBurgerC#\\BrazilBurgerWebClient\\BrazilBurgerWebClient.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\user\\Documents\\BrazilBurgerProject\\BrazilBurgerC#\\BrazilBurgerWebClient\\BrazilBurgerWebClient.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Documents\\BrazilBurger\\BrazilBurgerC#\\BrazilBurgerWebClient\\BrazilBurgerWebClient.csproj",
         "projectName": "BrazilBurgerWebClient",
-        "projectPath": "C:\\Users\\user\\Documents\\BrazilBurgerProject\\BrazilBurgerC#\\BrazilBurgerWebClient\\BrazilBurgerWebClient.csproj",
+        "projectPath": "C:\\Users\\user\\Documents\\BrazilBurger\\BrazilBurgerC#\\BrazilBurgerWebClient\\BrazilBurgerWebClient.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\user\\Documents\\BrazilBurgerProject\\BrazilBurgerC#\\BrazilBurgerWebClient\\obj\\",
+        "outputPath": "C:\\Users\\user\\Documents\\BrazilBurger\\BrazilBurgerC#\\BrazilBurgerWebClient\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
