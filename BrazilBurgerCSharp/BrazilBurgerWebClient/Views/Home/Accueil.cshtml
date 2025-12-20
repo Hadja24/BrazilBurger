@@ -1,0 +1,124 @@
+@model IEnumerable<BrazilBurgerWebClient.Models.Produit>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- ======= Header ======= -->
+<header class="bg-light shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center py-3">
+        <a href="/" class="navbar-brand">
+            <img src="~/images/logo.png" alt="Logo" style="height: 60px;">
+        </a>
+        <nav>
+            <ul class="nav">
+                <li class="nav-item"><a class="nav-link text-dark fw-bold" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link text-dark fw-bold" href="#">Menu</a></li>
+                <li class="nav-item"><a class="nav-link text-dark fw-bold" href="#">About</a></li>
+                <li class="nav-item"><a class="nav-link text-dark fw-bold" href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <div>
+            <a href="#" class="btn btn-warning fw-bold" style="font-size: 20px;">ORDER NOW</a>
+        </div>
+    </div>
+</header>
+
+<!-- ======= Hero Section ======= -->
+<section class="hero-section text-center py-5 bg-light">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Découvrez Nos Délicieux Burgers</h1>
+        <p class="lead mb-4">Des saveurs uniques préparées avec amour, pour vous satisfaire à chaque bouchée !</p>
+        <a href="#produits" class="btn btn-warning btn-lg fw-bold">Voir le Menu</a>
+    </div>
+</section>
+
+<!-- ======= Produits Dynamiques ======= -->
+<section id="produits" class="container my-5">
+    <div class="row">
+        @foreach (var produit in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="@produit.ImageUrl" class="card-img-top" alt="@produit.Nom" style="height: 250px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">@produit.Nom</h5>
+                        <p class="card-text fw-bold text-warning">@produit.Prix.ToString("N0") F CFA</p>
+                        <a href="#" class="btn btn-warning w-100 fw-bold">Ajouter au panier</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- ======= Footer ======= -->
+<footer class="bg-dark text-light py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <h5 class="fw-bold">Caring Hands</h5>
+                <p>Adresse: 123 Rue Principale, Dakar, Sénégal</p>
+                <p>Email: contact@caringhands.sn</p>
+                <p>Téléphone: +221 77 123 45 67</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h5 class="fw-bold">Liens rapides</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-light text-decoration-none">Accueil</a></li>
+                    <li><a href="#produits" class="text-light text-decoration-none">Menu</a></li>
+                    <li><a href="#" class="text-light text-decoration-none">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h5 class="fw-bold">Suivez-nous</h5>
+                <a href="#"><img src="~/images/facebook.png" alt="Facebook" style="height: 30px; margin-right:10px;"></a>
+                <a href="#"><img src="~/images/instagram.png" alt="Instagram" style="height: 30px; margin-right:10px;"></a>
+                <a href="#"><img src="~/images/twitter.png" alt="Twitter" style="height: 30px;"></a>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            &copy; 2025 Caring Hands. Tous droits réservés.
+        </div>
+    </div>
+</footer>
+
+<!-- ======= CSS Personnalisé ======= -->
+<style>
+    .hero-section h1 {
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: 3rem;
+    }
+
+    .hero-section p {
+        font-family: 'Inter', sans-serif;
+        font-weight: 300;
+        font-size: 1.25rem;
+    }
+
+    .card-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    .card-text {
+        font-family: 'Inter', sans-serif;
+        font-weight: 300;
+    }
+
+    .btn-warning {
+        background-color: #fac42f;
+        border: none;
+    }
+
+    footer h5 {
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+    }
+
+    footer p, footer a {
+        font-family: 'Inter', sans-serif;
+        font-weight: 300;
+    }
+</style>
