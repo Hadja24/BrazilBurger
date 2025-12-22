@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     zlib1g-dev \
     curl \
+    libpq-dev \
     && docker-php-ext-install intl pdo pdo_pgsql zip opcache
 
 # Installer Composer
