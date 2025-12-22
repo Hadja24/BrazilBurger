@@ -29,5 +29,5 @@ RUN composer install --no-dev --optimize-autoloader
 EXPOSE 8000
 
 # Commande pour lancer Symfony en prod
-CMD ["php", "bin/console", "server:run", "0.0.0.0:8000"]
+CMD ["php", "-d", "memory_limit=-1", "-S", "0.0.0.0:8000", "-t", "public"]
 
