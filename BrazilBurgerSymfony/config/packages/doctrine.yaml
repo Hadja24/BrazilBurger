@@ -1,6 +1,12 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        mapping_types:
+            role_enum: string
+            order_state_enum: string
+            payment_mode_enum: string
+            reception_type_enum: string
+            neighbourhood_enum: string
         # Version exacte du serveur PostgreSQL
         server_version: '16'
         # charset par défaut
