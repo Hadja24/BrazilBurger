@@ -23,8 +23,9 @@ WORKDIR /app
 COPY BrazilBurgerSymfony/ ./
 
 # Installer les dépendances PHP
+ARG APP_ENV=prod
+ENV APP_ENV=prod
 RUN composer install --no-dev --optimize-autoloader
-
 # Exposer le port 8000
 EXPOSE 8000
 
