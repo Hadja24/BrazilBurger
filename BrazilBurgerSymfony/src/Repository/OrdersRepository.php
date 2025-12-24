@@ -15,7 +15,39 @@ class OrdersRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Orders::class);
     }
+    
+    /**
+     * SRP: Cette méthode ne s'occupe que de la somme des recettes d'une période
+     */
+    public function findTotalRevenueByPeriod(\DateTimeInterface $start, \DateTimeInterface $end): float
+{
+    return (float) $this->createQueryBuilder('o')
+        ->select('SUM(o.totalPrice)')
+        ->where('o.orderDate BETWEEN :start AND :end')
+        // On ne compte que les commandes terminées pour la recette
+        ->andWhere('o.orderState = :finished') 
+        ->setParameter('start', $start)
+        ->setParameter('end', $end)
+        ->setParameter('finished', Orders::STATE_FINISHED)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
 
+    /**
+     * SRP: Compte les commandes selon un état précis
+     */
+    public function countByStatus(string $status, \DateTimeInterface $date): int
+    {
+        return (int) $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->where('o.orderState = :status')
+            ->andWhere('o.orderDate >= :date')
+            ->setParameter('status', $status)
+            ->setParameter('date', $date->format('Y-m-d 00:00:00'))
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+}
 //    /**
 //     * @return Orders[] Returns an array of Orders objects
 //     */
@@ -40,4 +72,4 @@ class OrdersRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-}
+

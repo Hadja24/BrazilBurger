@@ -23,9 +23,14 @@ WORKDIR /app
 COPY BrazilBurgerSymfony/ ./
 
 # Installer les dépendances PHP
-ARG APP_ENV=prod
 ENV APP_ENV=prod
-RUN composer install --no-dev --optimize-autoloader
+ENV APP_DEBUG=0
+
+# 3. On lance l'installation (c'est ici que ça plante chez toi)
+RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
+
+# 4. On lance les scripts APRES l'installation si nécessaire
+RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
 # Exposer le port 8000
 EXPOSE 8000
 

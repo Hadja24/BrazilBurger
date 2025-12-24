@@ -1,0 +1,31 @@
+{# templates/admin/_sidebar.html.twig #}
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; height: 100vh;">
+    <a href="{{ path('app_admin_dashboard') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <span class="fs-4 fw-bold">Brazil Burger 🍔</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="{{ path('app_admin_dashboard') }}" class="nav-link {{ app.request.get('_route') == 'app_admin_dashboard' ? 'active' : 'text-white' }}">
+                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+            </a>
+        </li>
+        <li>
+            {# Remplace par tes vraies routes plus tard #}
+            <a href="#" class="nav-link text-white">
+                <i class="bi bi-cart me-2"></i> Commandes
+            </a>
+        </li>
+        <li>
+            <a href="#" class="nav-link text-white">
+                <i class="bi bi-egg-fried me-2"></i> Burgers
+            </a>
+        </li>
+    </ul>
+    <hr>
+    <div class="dropdown">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown">
+            <strong>Admin</strong>
+        </a>
+    </div>
+</div>
