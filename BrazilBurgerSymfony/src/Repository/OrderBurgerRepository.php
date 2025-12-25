@@ -13,13 +13,20 @@ class OrderBurgerRepository extends ServiceEntityRepository
         parent::__construct($registry, OrderBurger::class);
     }
 
+
     public function findTopSoldBurgers(int $limit = 5): array
     {
         return $this->createQueryBuilder('ob')
-            ->select('b.name as name', 'SUM(ob.quantity) as totalQuantity')
-            ->join('ob.burger', 'b')
-            ->groupBy('b.id')
-            ->orderBy('totalQuantity', 'DESC')
+            ->leftJoin('ob.burger', 'b')
+            ->leftJoin('ob.order', 'o')
+            ->select('b.name as burgerName', 
+                    'SUM(ob.quantity) as totalSold',
+                    'b.price',
+                    'SUM(ob.quantity * b.price) as revenue')
+            ->where('o.orderState = :finished')
+            ->setParameter('finished', 'FINISHED')
+            ->groupBy('ob.burger')
+            ->orderBy('totalSold', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();

@@ -6,70 +6,111 @@ use App\Entity\Orders;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Orders>
- */
 class OrdersRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Orders::class);
     }
+
+    /**
+     * Calculer le revenu total sur une période
+     */
+    public function findTotalRevenueByPeriod(?\DateTimeImmutable $start = null, ?\DateTimeImmutable $end = null): float
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->select('SUM(o.totalPrice) as total')
+            ->where('o.orderState = :state')
+            ->setParameter('state', 'FINISHED');
+
+        if ($start !== null) {
+            $qb->andWhere('o.orderDate >= :start')
+               ->setParameter('start', $start);
+        }
+
+        if ($end !== null) {
+            $qb->andWhere('o.orderDate <= :end')
+               ->setParameter('end', $end);
+        }
+
+        $result = $qb->getQuery()->getSingleScalarResult();
+        return $result ? (float)$result : 0.0;
+    }
+
+    /**
+     * Commandes récentes - VERSION SIMPLIFIÉE
+     */
+    public function findRecentOrders(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('o')
+            ->select('o.id', 'o.totalPrice', 'o.orderDate', 'o.orderState')
+            ->orderBy('o.orderDate', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Version avec jointure SQL brute (si tu veux absolument les infos client)
+     */
+    public function findRecentOrdersWithCustomer(int $limit = 5): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        
+        $sql = '
+            SELECT o.id, o.total_price, o.order_date, o.order_state,
+                   a.name, a.surname
+            FROM orders o
+            LEFT JOIN customer c ON o.customer_id = c."Id"  -- Note: "Id" avec majuscule
+            LEFT JOIN account a ON c.account_id = a.id
+            ORDER BY o.order_date DESC
+            LIMIT :limit
+        ';
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('limit', $limit, \PDO::PARAM_INT);
+        
+        return $stmt->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * Nombre total de commandes
+     */
+    public function getTotalOrdersCount(): int
+    {
+        return $this->count([]);
+    }
     
     /**
-     * SRP: Cette méthode ne s'occupe que de la somme des recettes d'une période
+     * Nombre de commandes par statut
      */
-    public function findTotalRevenueByPeriod(\DateTimeInterface $start, \DateTimeInterface $end): float
-{
-    return (float) $this->createQueryBuilder('o')
-        ->select('SUM(o.totalPrice)')
-        ->where('o.orderDate BETWEEN :start AND :end')
-        // On ne compte que les commandes terminées pour la recette
-        ->andWhere('o.orderState = :finished') 
-        ->setParameter('start', $start)
-        ->setParameter('end', $end)
-        ->setParameter('finished', Orders::STATE_FINISHED)
-        ->getQuery()
-        ->getSingleScalarResult();
-}
-
-    /**
-     * SRP: Compte les commandes selon un état précis
-     */
-    public function countByStatus(string $status, \DateTimeInterface $date): int
+    public function getOrdersByStatus(string $status): int
     {
-        return (int) $this->createQueryBuilder('o')
-            ->select('COUNT(o.id)')
-            ->where('o.orderState = :status')
-            ->andWhere('o.orderDate >= :date')
-            ->setParameter('status', $status)
-            ->setParameter('date', $date->format('Y-m-d 00:00:00'))
-            ->getQuery()
-            ->getSingleScalarResult();
+        return $this->count(['orderState' => $status]);
+    }
+    
+    /**
+     * Revenu total
+     */
+    public function getTotalRevenue(): float
+    {
+        return $this->findTotalRevenueByPeriod();
+    }
+    
+    /**
+     * Compter les commandes du jour
+     */
+    public function countDailyOrders(\DateTimeImmutable $date): int
+    {
+        $startOfDay = $date->setTime(0, 0, 0);
+        $endOfDay = $date->setTime(23, 59, 59);
+        
+        return $this->count([
+            'orderDate' => [
+                'start' => $startOfDay,
+                'end' => $endOfDay
+            ],
+            'orderState' => 'FINISHED'
+        ]);
     }
 }
-//    /**
-//     * @return Orders[] Returns an array of Orders objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('o.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Orders
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
-

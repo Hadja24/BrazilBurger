@@ -6,6 +6,7 @@ use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
+#[ORM\Table(name: 'payment')]
 class Payment
 {
     #[ORM\Id]
@@ -16,14 +17,14 @@ class Payment
     #[ORM\Column]
     private ?float $amount = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'payment_date', type: 'datetime_immutable')]
     private ?\DateTimeImmutable $date = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(name:"mode", type:"string", length: 50)]
     private ?string $paymentMethod = null;
 
     #[ORM\OneToOne(inversedBy: 'payment', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: "order_id", referencedColumnName: "id", nullable: false)]
     private ?Orders $orders = null;
 
     public function getId(): ?int

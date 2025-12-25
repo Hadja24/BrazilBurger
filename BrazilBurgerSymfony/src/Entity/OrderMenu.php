@@ -5,20 +5,20 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "order_menu")] // Nom exact dans ta base Neon
+#[ORM\Table(name: 'order_menu')] // Nom exact dans ta base Neon
 class OrderMenu
 {
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Orders::class)]
-    #[ORM\JoinColumn(name: "order_id", referencedColumnName: "id", nullable: false)]
+    #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false)]
     private ?Orders $order = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Menu::class)]
-    #[ORM\JoinColumn(name: "menu_id", referencedColumnName: "id", nullable: false)]
+    #[ORM\JoinColumn(name: 'menu_id', referencedColumnName: 'id', nullable: false)]
     private ?Menu $menu = null;
 
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: 'integer')]
     private ?int $quantity = null;
 
     public function getOrder(): ?Orders
@@ -29,6 +29,7 @@ class OrderMenu
     public function setOrder(?Orders $order): self
     {
         $this->order = $order;
+
         return $this;
     }
 
@@ -40,6 +41,7 @@ class OrderMenu
     public function setMenu(?Menu $menu): self
     {
         $this->menu = $menu;
+
         return $this;
     }
 
@@ -51,6 +53,7 @@ class OrderMenu
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
+
         return $this;
     }
 }

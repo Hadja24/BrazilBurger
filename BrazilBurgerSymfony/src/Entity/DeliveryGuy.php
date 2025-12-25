@@ -6,6 +6,7 @@ use App\Repository\DeliveryGuyRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DeliveryGuyRepository::class)]
+#[ORM\Table(name: 'deliveryguy')]
 class DeliveryGuy
 {
     #[ORM\Id]

@@ -1,0 +1,290 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails Commande #{{ order.id }} - Brazil Burger{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Styles du thème Brazil Burger */
+        :root {
+            --brazil-green: #009739;
+            --brazil-yellow: #FEDD00;
+            --brazil-blue: #012169;
+            --brazil-white: #FFFFFF;
+            --brazil-gray: #F5F5F5;
+            --brazil-dark: #333333;
+        }
+        
+        .order-detail-card {
+            background: var(--brazil-white);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .order-header {
+            background: linear-gradient(90deg, var(--brazil-green) 0%, var(--brazil-yellow) 50%, var(--brazil-blue) 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .info-box {
+            background: var(--brazil-gray);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--brazil-green);
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--brazil-dark);
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 18px;
+            color: var(--brazil-dark);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+        }
+        
+        .btn-update-state {
+            background: linear-gradient(135deg, var(--brazil-blue), #1A3A8F);
+            color: white;
+        }
+        
+        .state-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .state-option {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border: 2px solid transparent;
+        }
+        
+        .state-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .state-option.active {
+            border-color: var(--brazil-dark);
+        }
+        
+        .state-pending-option {
+            background: linear-gradient(135deg, #FFD166, #FFB347);
+            color: #8A5700;
+        }
+        
+        .state-cancelled-option {
+            background: linear-gradient(135deg, #EF476F, #FF6B6B);
+            color: white;
+        }
+        
+        .state-finished-option {
+            background: linear-gradient(135deg, #06D6A0, #0CB48A);
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="order-header text-center">
+        <h1 class="display-5 mb-3">
+            <i class="fas fa-file-invoice me-2"></i>
+            COMMANDE #{{ order.id }}
+        </h1>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ path('app_orders_index') }}" class="btn btn-back btn-brazil">
+                <i class="fas fa-arrow-left me-2"></i>
+                Retour à la liste
+            </a>
+            <a href="{{ path('app_orders_edit', {'id': order.id}) }}" class="btn btn-edit btn-brazil">
+                <i class="fas fa-edit me-2"></i>
+                Modifier
+            </a>
+        </div>
+    </div>
+    
+    <div class="order-detail-card">
+        <div class="row">
+            <!-- Informations générales -->
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">Date de commande</div>
+                    <div class="info-value">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                        {{ order.orderDate ? order.orderDate|date('d/m/Y à H:i') : 'N/A' }}
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-label">État actuel</div>
+                    <div class="info-value">
+                        {% if order.orderState == 'PENDING' %}
+                            <span class="state-badge state-pending">
+                                <i class="fas fa-clock me-1"></i>
+                                En Attente
+                            </span>
+                        {% elseif order.orderState == 'CANCELLED' %}
+                            <span class="state-badge state-cancelled">
+                                <i class="fas fa-times me-1"></i>
+                                Annulée
+                            </span>
+                        {% elseif order.orderState == 'FINISHED' %}
+                            <span class="state-badge state-finished">
+                                <i class="fas fa-check me-1"></i>
+                                Terminée
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="info-box">
+                    <div class="info-label">Montant total</div>
+                    <div class="info-value h3 text-success">
+                        <i class="fas fa-euro-sign me-2"></i>
+                        {{ order.totalPrice }} €
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-label">Type de réception</div>
+                    <div class="info-value">
+                        {% if order.receptionType == 'DELIVERY' %}
+                            <i class="fas fa-truck me-2 text-info"></i>
+                            Livraison
+                        {% else %}
+                            <i class="fas fa-store me-2 text-secondary"></i>
+                            Sur place
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section de changement d'état -->
+        <div class="mt-4 pt-4 border-top">
+            <h4 class="mb-3">
+                <i class="fas fa-sync-alt me-2"></i>
+                Changer l'état de la commande
+            </h4>
+            
+            <form action="{{ path('app_orders_update_state', {'id': order.id}) }}" method="post" id="stateForm">
+                <div class="state-selector">
+                    <div class="state-option state-pending-option {% if order.orderState == 'PENDING' %}active{% endif %}" 
+                         onclick="selectState('PENDING')">
+                        <i class="fas fa-clock me-2"></i>
+                        En Attente
+                    </div>
+                    
+                    <div class="state-option state-cancelled-option {% if order.orderState == 'CANCELLED' %}active{% endif %}" 
+                         onclick="selectState('CANCELLED')">
+                        <i class="fas fa-times me-2"></i>
+                        Annuler
+                    </div>
+                    
+                    <div class="state-option state-finished-option {% if order.orderState == 'FINISHED' %}active{% endif %}" 
+                         onclick="selectState('FINISHED')">
+                        <i class="fas fa-check me-2"></i>
+                        Terminer
+                    </div>
+                </div>
+                
+                <input type="hidden" name="state" id="selectedState" value="{{ order.orderState }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('update_state' ~ order.id) }}">
+                
+                <button type="submit" class="btn btn-update-state btn-brazil mt-3">
+                    <i class="fas fa-save me-2"></i>
+                    Mettre à jour l'état
+                </button>
+            </form>
+        </div>
+        
+        <!-- Détails supplémentaires (si vous avez d'autres relations) -->
+        {% if order.orderLines is defined and order.orderLines|length > 0 %}
+        <div class="mt-4 pt-4 border-top">
+            <h4 class="mb-3">
+                <i class="fas fa-list-ul me-2"></i>
+                Articles commandés
+            </h4>
+            
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Article</th>
+                            <th>Quantité</th>
+                            <th>Prix unitaire</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for line in order.orderLines %}
+                        <tr>
+                            <td>{{ line.product.name }}</td>
+                            <td>{{ line.quantity }}</td>
+                            <td>{{ line.unitPrice }} €</td>
+                            <td>{{ line.totalPrice }} €</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let currentState = '{{ order.orderState }}';
+        
+        function selectState(state) {
+            currentState = state;
+            document.getElementById('selectedState').value = state;
+            
+            // Mettre à jour les styles
+            document.querySelectorAll('.state-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Confirmation pour l'annulation
+        document.getElementById('stateForm').addEventListener('submit', function(e) {
+            const selectedState = document.getElementById('selectedState').value;
+            
+            if (selectedState === 'CANCELLED') {
+                if (!confirm('Êtes-vous sûr de vouloir annuler cette commande ? Cette action est irréversible.')) {
+                    e.preventDefault();
+                }
+            }
+        });
+    </script>
+{% endblock %}

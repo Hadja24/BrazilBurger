@@ -16,6 +16,21 @@ class ZoneRepository extends ServiceEntityRepository
         parent::__construct($registry, Zone::class);
     }
 
+    public function findMostPopularZones(int $limit = 4): array
+{
+    return $this->createQueryBuilder('z')
+        ->leftJoin('z.orders', 'o')
+        ->select('z.name as zoneName', 
+                 'COUNT(o.id) as orderCount',
+                 'SUM(o.totalPrice) as totalRevenue')
+        ->where('o.orderState = :finished')
+        ->setParameter('finished', 'FINISHED')
+        ->groupBy('z.id')
+        ->orderBy('orderCount', 'DESC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+}
     //    /**
     //     * @return Zone[] Returns an array of Zone objects
     //     */

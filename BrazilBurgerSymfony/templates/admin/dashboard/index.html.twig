@@ -1,95 +1,185 @@
-{% extends 'admin/base.html.twig' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - Brazil Burger{% endblock %}
+
+{% block nav_dashboard %}active{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Tableau de Bord</h1>
-    <span class="badge bg-white text-dark shadow-sm p-2 text-muted">
-        <i class="bi bi-calendar3 me-1"></i> Aujourd'hui : {{ "now"|date("d/m/Y") }}
-    </span>
-</div>
-
-<div class="row g-4 mb-5">
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-start border-primary border-5 p-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Recettes (Jour)</div>
-                    <div class="h4 mb-0 fw-bold text-dark">{{ dailyRevenue|default(0)|number_format(2, ',', ' ') }} €</div>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="bi bi-cash-coin fs-1 text-success"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title text-muted">Total Revenue</h5>
+                            <h3 class="mb-0">{{ totalRevenue|default(0)|number_format(0, ',', ' ') }} F CFA</h3>
+                        </div>
+                    </div>
                 </div>
-                <i class="bi bi-currency-euro stat-icon text-primary"></i>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="bi bi-receipt fs-1 text-primary"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title text-muted">Total Orders</h5>
+                            <h3 class="mb-0">{{ totalOrders|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="bi bi-people fs-1 text-warning"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title text-muted">Total Customers</h5>
+                            <h3 class="mb-0">{{ totalCustomers|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="bi bi-clock-history fs-1 text-danger"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title text-muted">Pending Orders</h5>
+                            <h3 class="mb-0">{{ pendingOrders|default(0) }}</h3>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-start border-warning border-5 p-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">En attente</div>
-                    <div class="h4 mb-0 fw-bold text-dark">{{ pendingOrders }}</div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Orders</h5>
                 </div>
-                <i class="bi bi-clock-history stat-icon text-warning"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-start border-success border-5 p-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Terminées</div>
-                    <div class="h4 mb-0 fw-bold text-dark">{{ finishedOrders }}</div>
-                </div>
-                <i class="bi bi-check-circle stat-icon text-success"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-start border-danger border-5 p-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Annulées</div>
-                    <div class="h4 mb-0 fw-bold text-dark">{{ cancelledOrders }}</div>
-                </div>
-                <i class="bi bi-x-circle stat-icon text-danger"></i>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card shadow-sm">
-    <div class="card-header bg-white py-3">
-        <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-graph-up-arrow me-2"></i>Top 5 des Burgers les plus vendus</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Burger</th>
-                        <th class="text-center">Ventes cumulées</th>
-                        <th class="text-center">Popularité</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for burger in topBurgers %}
-                    <tr>
-                        <td class="fw-bold">{{ burger.name }}</td>
-                        <td class="text-center">
-                            <span class="badge bg-info text-white rounded-pill">{{ burger.totalQuantity }} unités</span>
-                        </td>
-                        <td class="text-center">
-                             <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ burger.totalQuantity * 10 }}%"></div>
-                            </div>
-                        </td>
-                    </tr>
+                <div class="card-body">
+                    {% if recentOrders|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recentOrders %}
+                                <tr>
+                                    <td>#{{ order.id }}</td>
+                                    <td>
+                                        {% if order.name is defined %}
+                                        {{ order.name }} {{ order.surname }}
+                                        {% else %}
+                                        Customer #{{ order.id }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ order.totalPrice|default(0)|number_format(0, ',', ' ') }} F CFA</td>
+                                    <td>
+                                        {% if order.orderState == 'FINISHED' %}
+                                        <span class="badge bg-success">Completed</span>
+                                        {% elseif order.orderState == 'PENDING' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                        {% elseif order.orderState == 'CANCELLED' %}
+                                        <span class="badge bg-danger">Cancelled</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">{{ order.orderState }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                     {% else %}
-                    <tr><td colspan="3" class="text-center text-muted">Aucune donnée disponible</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    <div class="text-center py-4">
+                        <i class="bi bi-receipt fs-1 text-muted mb-3"></i>
+                        <p class="text-muted">No recent orders found</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Order Status Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="p-3">
+                                <h2 class="text-warning">{{ pendingOrders|default(0) }}</h2>
+                                <p class="text-muted mb-0">Pending</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-3">
+                                <h2 class="text-success">{{ finishedOrders|default(0) }}</h2>
+                                <p class="text-muted mb-0">Completed</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-3">
+                                <h2 class="text-danger">{{ cancelledOrders|default(0) }}</h2>
+                                <p class="text-muted mb-0">Cancelled</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Daily Stats</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="text-muted mb-1">Today's Revenue</p>
+                            <h4>{{ dailyRevenue|default(0)|number_format(0, ',', ' ') }} F CFA</h4>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-muted mb-1">Today's Orders</p>
+                            <h4>{{ dailyOrders|default(0) }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

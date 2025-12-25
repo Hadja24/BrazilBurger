@@ -8,15 +8,16 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
+#[ORM\Table(name: 'customer')]
 class Customer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: "id", type: "integer")]  // ICI: spécifier le nom exact de la colonne
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'customer', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: "account_id", referencedColumnName: "id", nullable: false)]
     private ?Account $account = null;
 
     /**

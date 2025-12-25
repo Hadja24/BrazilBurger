@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Entity;
-
+use Doctrine\DBAL\Types\Types;
 use App\Repository\ZoneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\DecimalType;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ZoneRepository::class)]
+#[ORM\Table(name: 'zones')]
 class Zone
 {
     #[ORM\Id]
@@ -15,7 +17,8 @@ class Zone
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+
+    #[ORM\Column(name: 'prix_livraison', type: Types::FLOAT, precision: 10, scale: 2, nullable: true)]
     private ?float $deliveryPrice = null;
 
     #[ORM\Column(length: 50)]

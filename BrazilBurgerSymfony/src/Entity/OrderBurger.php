@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "order_burger")] // Nom exact dans ta base Neon
+#[ORM\Table(name: 'order_burger')] // Nom exact dans ta base Neon
 class OrderBurger
 {
     #[ORM\Id]

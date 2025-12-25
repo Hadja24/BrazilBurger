@@ -6,6 +6,7 @@ use App\Repository\NeighbourhoodRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: NeighbourhoodRepository::class)]
+#[ORM\Table(name: 'neighbourhood')]
 class Neighbourhood
 {
     #[ORM\Id]

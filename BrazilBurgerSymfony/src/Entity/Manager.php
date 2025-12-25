@@ -6,6 +6,7 @@ use App\Repository\ManagerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ManagerRepository::class)]
+#[ORM\Table(name: 'manager')]
 class Manager
 {
     #[ORM\Id]
