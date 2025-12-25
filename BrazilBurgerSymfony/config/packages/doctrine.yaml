@@ -1,25 +1,22 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        # Version exacte du serveur PostgreSQL
+        server_version: '16'
+        profiling_collect_backtrace: '%kernel.debug%'
         mapping_types:
             role_enum: string
             order_state_enum: string
             payment_mode_enum: string
             reception_type_enum: string
             neighbourhood_enum: string
-        # Version exacte du serveur PostgreSQL
-        server_version: '16'
-        # charset par défaut
-        charset: 'utf8'
-        default_table_options:
-            charset: utf8
-            collate: utf8_general_ci
-
+        
+        
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '16'
 
-        profiling_collect_backtrace: '%kernel.debug%'
+       
     orm:
         validate_xml_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware

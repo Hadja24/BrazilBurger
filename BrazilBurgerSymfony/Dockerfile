@@ -27,15 +27,15 @@ COPY BrazilBurgerSymfony/ ./
 #ENV APP_DEBUG=0
 
 # 3. On lance l'installation (c'est ici que ça plante chez toi)
-RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
+RUN composer install --optimize-autoloader --no-interaction
 
 # Créer un script de démarrage qui fait tout
-RUN echo '#!/bin/sh\n\
-sleep 2\n\
-# On crée les tables directement à partir des Entités PHP\n\
-php bin/console doctrine:schema:update --force --no-interaction\n\
-# On lance le serveur\n\
-php -d memory_limit=-1 -S 0.0.0.0:8000 -t public public/index.php' > /app/start.sh
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'sleep 3' >> /app/start.sh && \
+    echo 'echo "Mise à jour de la base de données..."' >> /app/start.sh && \
+    echo 'php bin/console doctrine:schema:update --force --no-interaction || echo "Le schema est déjà à jour ou erreur de connexion"' >> /app/start.sh && \
+    echo 'echo "Lancement du serveur..."' >> /app/start.sh && \
+    echo 'php -d memory_limit=-1 -S 0.0.0.0:8000 -t public public/index.php' >> /app/start.sh
 # 4. On lance les scripts APRES l'installation si nécessaire
 #RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
 
