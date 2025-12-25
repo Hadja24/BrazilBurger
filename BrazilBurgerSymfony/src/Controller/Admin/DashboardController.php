@@ -17,6 +17,7 @@ class DashboardController extends AbstractController
         private OrdersRepository $ordersRepo,
         private OrderBurgerRepository $orderBurgerRepo
     ) {}
+    /*
     #[Route('/admin/dashboard', name: 'app_admin_dashboard')]
     public function index(): Response
     {
@@ -34,5 +35,16 @@ class DashboardController extends AbstractController
             
             'topBurgers'      => $this->orderBurgerRepo->findTopSoldBurgers(5),
         ]);
-    }
+    }*/
+    public function index(): Response
+{
+    // On commente tout et on envoie des valeurs à zéro
+    return $this->render('admin/dashboard/index.html.twig', [
+        'dailyRevenue'    => 0,
+        'pendingOrders'   => 0,
+        'finishedOrders'  => 0,
+        'cancelledOrders' => 0,
+        'topBurgers'      => [], // Tableau vide pour tester
+    ]);
+}
 }
