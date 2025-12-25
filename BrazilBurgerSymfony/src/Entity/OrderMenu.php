@@ -9,12 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 class OrderMenu
 {
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Orders::class)]
+    #[ORM\ManyToOne(targetEntity: Orders::class, inversedBy: 'orderMenus')]
     #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false)]
     private ?Orders $order = null;
 
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Menu::class)]
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'orderMenus')]
     #[ORM\JoinColumn(name: 'menu_id', referencedColumnName: 'id', nullable: false)]
     private ?Menu $menu = null;
 

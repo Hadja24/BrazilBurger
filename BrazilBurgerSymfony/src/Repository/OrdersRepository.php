@@ -13,6 +13,28 @@ class OrdersRepository extends ServiceEntityRepository
         parent::__construct($registry, Orders::class);
     }
 
+    public function findByFilters(?string $state = null, ?string $type = null): array
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->orderBy('o.orderDate', 'DESC');
+
+        // Filtrage par état
+        if ($state && $state !== 'all') {
+            $qb->andWhere('o.orderState = :state')
+            ->setParameter('state', $state);
+        }
+
+        // Filtrage par type de réception
+        if ($type && $type !== 'all') {
+            $qb->andWhere('o.receptionType = :type')
+            ->setParameter('type', $type);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+
+
     /**
      * Calculer le revenu total sur une période
      */

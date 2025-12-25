@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repository;
-
+use App\Entity\Orders;
 use App\Entity\OrderMenu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,6 +34,14 @@ class OrderMenuRepository extends ServiceEntityRepository
         ->getResult();
 }
 
+public function findByOrder(Orders $order): array
+{
+    return $this->createQueryBuilder('om')
+        ->andWhere('om.order = :order')
+        ->setParameter('order', $order)
+        ->getQuery()
+        ->getResult();
+}
     //    /**
     //     * @return OrderMenu[] Returns an array of OrderMenu objects
     //     */

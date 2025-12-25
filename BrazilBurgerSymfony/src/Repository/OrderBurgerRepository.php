@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repository;
-
+use App\Entity\Orders;
 use App\Entity\OrderBurger;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -28,6 +28,15 @@ class OrderBurgerRepository extends ServiceEntityRepository
             ->groupBy('ob.burger')
             ->orderBy('totalSold', 'DESC')
             ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByOrder(Orders $order): array
+    {
+        return $this->createQueryBuilder('ob')
+            ->andWhere('ob.order = :order')
+            ->setParameter('order', $order)
             ->getQuery()
             ->getResult();
     }

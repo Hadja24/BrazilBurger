@@ -158,6 +158,98 @@
             padding: 40px;
         }
         
+        /* Filtres */
+        .filter-section {
+            background: var(--brazil-gray);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--brazil-dark);
+            margin-bottom: 15px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            border: 2px solid transparent;
+            background: white;
+            color: var(--brazil-dark);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .filter-btn.active {
+            border-color: var(--brazil-green);
+            background: var(--brazil-green);
+            color: white;
+        }
+        
+        .filter-btn-state-pending:hover { border-color: #FFB347; }
+        .filter-btn-state-cancelled:hover { border-color: #EF476F; }
+        .filter-btn-state-finished:hover { border-color: #06D6A0; }
+        .filter-btn-type-delivery:hover { border-color: var(--brazil-blue); }
+        .filter-btn-type-pickup:hover { border-color: var(--brazil-yellow); }
+        
+        .reset-filter {
+            background: transparent;
+            border: 2px solid var(--brazil-dark);
+            color: var(--brazil-dark);
+        }
+        
+        .reset-filter:hover {
+            background: var(--brazil-dark);
+            color: white;
+        }
+        
+        /* Compteur de résultats */
+        .results-counter {
+            background: var(--brazil-blue);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Ajoutez ceci dans votre section styles */
+        .filter-btn-type-restaurant {
+            background: linear-gradient(135deg, #06D6A0, #0CB48A);
+            color: white;
+        }
+
+        .filter-btn-type-restaurant:hover {
+            border-color: #06D6A0;
+        }
+
+        .filter-btn-type-restaurant.active {
+            border-color: #06D6A0;
+            background: linear-gradient(135deg, #0CB48A, #06D6A0);
+            color: white;
+        }
         /* Responsive */
         @media (max-width: 768px) {
             .orders-container {
@@ -217,6 +309,106 @@
             </a>
         </div>
         
+        <!-- Section des filtres -->
+        <div class="filter-section">
+            <h4 class="filter-title">
+                <i class="fas fa-filter me-2"></i>
+                Filtrer les commandes
+            </h4>
+            
+            <!-- Filtres par état -->
+            <div class="mb-4">
+                <h6 class="mb-3">
+                    <i class="fas fa-tasks me-2"></i>
+                    Par état :
+                </h6>
+                <div class="filter-buttons">
+                    <a href="{{ path('app_orders_index', {state: 'all', type: current_type}) }}" 
+                       class="filter-btn {{ current_state == 'all' or current_state is empty ? 'active' : '' }}">
+                        <i class="fas fa-layer-group me-1"></i>
+                        Tous les états
+                    </a>
+                    <a href="{{ path('app_orders_index', {state: 'PENDING', type: current_type}) }}" 
+                       class="filter-btn filter-btn-state-pending {{ current_state == 'PENDING' ? 'active' : '' }}">
+                        <i class="fas fa-clock me-1"></i>
+                        En Attente
+                    </a>
+                    <a href="{{ path('app_orders_index', {state: 'FINISHED', type: current_type}) }}" 
+                       class="filter-btn filter-btn-state-finished {{ current_state == 'FINISHED' ? 'active' : '' }}">
+                        <i class="fas fa-check me-1"></i>
+                        Terminées
+                    </a>
+                    <a href="{{ path('app_orders_index', {state: 'CANCELLED', type: current_type}) }}" 
+                       class="filter-btn filter-btn-state-cancelled {{ current_state == 'CANCELLED' ? 'active' : '' }}">
+                        <i class="fas fa-times me-1"></i>
+                        Annulées
+                    </a>
+                </div>
+            </div>
+            
+                        <!-- Filtres par type -->
+            <div class="mb-3">
+                <h6 class="mb-3">
+                    <i class="fas fa-truck me-2"></i>
+                    Par type de réception :
+                </h6>
+                <div class="filter-buttons">
+                    <a href="{{ path('app_orders_index', {state: current_state, type: 'all'}) }}" 
+                    class="filter-btn {{ current_type == 'all' or current_type is empty ? 'active' : '' }}">
+                        <i class="fas fa-th me-1"></i>
+                        Tous les types
+                    </a>
+                    <a href="{{ path('app_orders_index', {state: current_state, type: 'DELIVERY'}) }}" 
+                    class="filter-btn filter-btn-type-delivery {{ current_type == 'DELIVERY' ? 'active' : '' }}">
+                        <i class="fas fa-truck me-1"></i>
+                        Livraison
+                    </a>
+                    <a href="{{ path('app_orders_index', {state: current_state, type: 'PICK_UP'}) }}" 
+                    class="filter-btn filter-btn-type-pickup {{ current_type == 'PICK_UP' ? 'active' : '' }}">
+                        <i class="fas fa-bag-shopping me-1"></i>
+                        À emporter
+                    </a>
+                    <a href="{{ path('app_orders_index', {state: current_state, type: 'AT_THE_RESTAURANT'}) }}" 
+                    class="filter-btn filter-btn-type-restaurant {{ current_type == 'AT_THE_RESTAURANT' ? 'active' : '' }}">
+                        <i class="fas fa-utensils me-1"></i>
+                        Sur place
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Réinitialiser les filtres -->
+            {% if current_state or current_type %}
+            <div class="text-center mt-4">
+                <a href="{{ path('app_orders_index') }}" class="filter-btn reset-filter">
+                    <i class="fas fa-undo me-2"></i>
+                    Réinitialiser tous les filtres
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Compteur de résultats -->
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <div class="results-counter">
+                <i class="fas fa-chart-bar"></i>
+                {{ orders|length }} commande(s) trouvée(s)
+            </div>
+            
+            <!-- Indicateur de filtrage actif -->
+            {% if current_state or current_type %}
+            <div class="text-muted small">
+                <i class="fas fa-info-circle me-1"></i>
+                Filtres actifs : 
+                {% if current_state and current_state != 'all' %}
+                    <span class="badge bg-primary ms-1">État: {{ current_state }}</span>
+                {% endif %}
+                {% if current_type and current_type != 'all' %}
+                    <span class="badge bg-info ms-1">Type: {{ current_type }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        
         <div class="table-responsive">
             <table class="table table-custom table-hover">
                 <thead>
@@ -259,18 +451,25 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if order.receptionType == 'DELIVERY' %}
-                                <span class="badge bg-info">
-                                    <i class="fas fa-truck me-1"></i>
-                                    Livraison
-                                </span>
-                            {% else %}
-                                <span class="badge bg-secondary">
-                                    <i class="fas fa-store me-1"></i>
-                                    Sur Place
-                                </span>
-                            {% endif %}
-                        </td>
+                {% if order.receptionType == 'DELIVERY' %}
+                    <span class="badge bg-info">
+                        <i class="fas fa-truck me-1"></i>
+                        Livraison
+                    </span>
+                {% elseif order.receptionType == 'PICK_UP' %}
+                    <span class="badge bg-warning text-dark">
+                        <i class="fas fa-bag-shopping me-1"></i>
+                        À emporter
+                    </span>
+                {% elseif order.receptionType == 'AT_THE_RESTAURANT' %}
+                    <span class="badge bg-success">
+                        <i class="fas fa-utensils me-1"></i>
+                        Sur place
+                    </span>
+                {% else %}
+                    <span class="badge bg-secondary">{{ order.receptionType }}</span>
+                {% endif %}
+            </td>
                         <td>
                             <div class="btn-group" role="group">
                                 <a href="{{ path('app_orders_show', {'id': order.id}) }}" 
@@ -310,13 +509,17 @@
     {{ parent() }}
     <script>
         // Animation des boutons
-        document.querySelectorAll('.btn-brazil').forEach(button => {
+        document.querySelectorAll('.btn-brazil, .filter-btn').forEach(button => {
             button.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'translateY(-2px)';
+                }
             });
             
             button.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
+                if (!this.classList.contains('active')) {
+                    this.style.transform = 'translateY(0)';
+                }
             });
         });
         
@@ -328,5 +531,29 @@
                 bsAlert.close();
             });
         }, 5000);
+        
+        // Animation des filtres
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (!this.classList.contains('active')) {
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Mettre à jour le compteur en temps réel
+        function updateResultsCounter() {
+            const count = {{ orders|length }};
+            const counter = document.querySelector('.results-counter');
+            if (counter) {
+                counter.innerHTML = `<i class="fas fa-chart-bar"></i> ${count} commande(s) trouvée(s)`;
+            }
+        }
+        
+        // Initialiser
+        updateResultsCounter();
     </script>
 {% endblock %}

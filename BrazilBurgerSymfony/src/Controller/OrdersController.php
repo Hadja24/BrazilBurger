@@ -15,10 +15,18 @@ use Symfony\Component\Routing\Attribute\Route;
 final class OrdersController extends AbstractController
 {
     #[Route(name: 'app_orders_index', methods: ['GET'])]
-    public function index(OrdersRepository $ordersRepository): Response
+    public function index(OrdersRepository $ordersRepository, Request $request): Response
     {
+        // Récupérer les paramètres de filtrage
+        $state = $request->query->get('state');
+        $type = $request->query->get('type');
+
+        // Filtrer les commandes
+        $orders = $ordersRepository->findByFilters($state, $type);
         return $this->render('orders/index.html.twig', [
-            'orders' => $ordersRepository->findAll(),
+            'orders' => $orders,
+            'current_state' => $state,
+            'current_type' => $type,
         ]);
     }
 
