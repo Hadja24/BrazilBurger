@@ -23,18 +23,28 @@ WORKDIR /app
 COPY BrazilBurgerSymfony/ ./
 
 # Installer les dépendances PHP
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
+#ENV APP_ENV=prod
+#ENV APP_DEBUG=0
 
 # 3. On lance l'installation (c'est ici que ça plante chez toi)
 RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
+# Créer un script de démarrage qui fait tout
+RUN echo '#!/bin/sh\n\
+sleep 2\n\
+# On crée les tables directement à partir des Entités PHP\n\
+php bin/console doctrine:schema:update --force --no-interaction\n\
+# On lance le serveur\n\
+php -d memory_limit=-1 -S 0.0.0.0:8000 -t public public/index.php' > /app/start.sh
 # 4. On lance les scripts APRES l'installation si nécessaire
-RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
+#RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
+
+RUN chmod +x /app/start.sh
+
 # Exposer le port 8000
 EXPOSE 8000
 
 # Commande pour lancer Symfony en prod
 # Utilise le script index.php comme routeur universel
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public", "public/index.php"]
+CMD ["/app/start.sh"]
 
