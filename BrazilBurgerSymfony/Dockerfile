@@ -35,5 +35,6 @@ RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
 EXPOSE 8000
 
 # Commande pour lancer Symfony en prod
-CMD ["php", "-d", "memory_limit=-1", "-S", "0.0.0.0:8000", "-t", "public", "public/index.php"]
+# Utilise le script index.php comme routeur universel
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public", "public/index.php"]
 
