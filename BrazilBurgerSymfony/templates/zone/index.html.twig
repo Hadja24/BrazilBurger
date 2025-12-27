@@ -1,0 +1,306 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Zones de livraison - Brazil Burger{% endblock %}
+
+{% block nav_zones %}active{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --brazil-green: #009739;
+            --brazil-yellow: #FEDD00;
+            --brazil-blue: #012169;
+            --brazil-white: #FFFFFF;
+            --brazil-gray: #F5F5F5;
+            --brazil-dark: #333333;
+        }
+        
+        .brazil-header {
+            background: linear-gradient(90deg, var(--brazil-green) 0%, var(--brazil-yellow) 50%, var(--brazil-blue) 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        
+        .zone-card {
+            background: var(--brazil-white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 5px solid var(--brazil-green);
+            height: 100%;
+        }
+        
+        .zone-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+        
+        .zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--brazil-gray);
+        }
+        
+        .zone-title {
+            color: var(--brazil-dark);
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .zone-price {
+            background: var(--brazil-green);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .zone-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: var(--brazil-gray);
+            border-radius: 8px;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--brazil-green);
+            display: block;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+        }
+        
+        .zone-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-zone {
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-view {
+            background: linear-gradient(135deg, var(--brazil-blue), #1A3A8F);
+            color: white;
+            border: none;
+        }
+        
+        .btn-view:hover {
+            background: linear-gradient(135deg, #1A3A8F, var(--brazil-blue));
+            transform: translateY(-2px);
+        }
+        
+        .btn-edit {
+            background: linear-gradient(135deg, var(--brazil-yellow), #E6C300);
+            color: var(--brazil-dark);
+            border: none;
+        }
+        
+        .btn-edit:hover {
+            background: linear-gradient(135deg, #E6C300, var(--brazil-yellow));
+            transform: translateY(-2px);
+        }
+        
+        .btn-new {
+            background: linear-gradient(135deg, var(--brazil-green), #00802C);
+            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .btn-new:hover {
+            background: linear-gradient(135deg, #00802C, var(--brazil-green));
+            transform: translateY(-2px);
+        }
+        
+        .no-zones {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        
+        .no-zones i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .zone-card {
+                padding: 20px;
+            }
+            
+            .zone-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .zone-actions {
+                flex-direction: column;
+            }
+            
+            .btn-zone {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="brazil-header text-center">
+        <h1 class="display-4 mb-0">
+            <i class="fas fa-map-marked-alt me-2"></i>
+            GESTION DES ZONES DE LIVRAISON
+        </h1>
+        <p class="lead mb-0">Gérez les zones de livraison Brazil Burger</p>
+    </div>
+    
+    <!-- Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0" style="color: var(--brazil-dark); font-weight: 700;">
+            <i class="fas fa-layer-group me-2"></i>
+            Toutes les zones ({{ zones|length }})
+        </h2>
+        <a href="{{ path('app_zones_new') }}" class="btn btn-new">
+            <i class="fas fa-plus me-2"></i>
+            Nouvelle zone
+        </a>
+    </div>
+    
+    <!-- Messages flash -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    
+    <!-- Liste des zones -->
+    {% if zones|length > 0 %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for zoneData in zones %}
+                {% set zone = zoneData.zone %}
+                <div class="col">
+                    <div class="zone-card">
+                        <div class="zone-header">
+                            <h3 class="zone-title">{{ zone.name }}</h3>
+                            <span class="zone-price">
+                                {% if zone.deliveryPrice %}
+                                    {{ zone.deliveryPrice|number_format(0, ',', ' ') }} FCFA
+                                {% else %}
+                                    Gratuit
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="zone-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">{{ zoneData.total_orders }}</span>
+                                <span class="stat-label">Commandes</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ zoneData.delivered_orders }}</span>
+                                <span class="stat-label">Livrées</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ zoneData.neighbourhood_count }}</span>
+                                <span class="stat-label">Quartiers</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ zoneData.total_revenue|number_format(0, ',', ' ') }} FCFA</span>
+                                <span class="stat-label">Revenus</span>
+                            </div>
+                        </div>
+                        
+                        <div class="zone-actions mt-3">
+                            <a href="{{ path('app_zones_show', {'id': zone.id}) }}" class="btn btn-view btn-zone">
+                                <i class="fas fa-chart-line me-2"></i>
+                                Dashboard
+                            </a>
+                            <a href="{{ path('app_zones_edit', {'id': zone.id}) }}" class="btn btn-edit btn-zone">
+                                <i class="fas fa-edit me-2"></i>
+                                Modifier
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-zones">
+            <i class="fas fa-map-marked-alt"></i>
+            <h3 class="mb-3">Aucune zone créée</h3>
+            <p class="text-muted mb-4">Commencez par créer votre première zone de livraison</p>
+            <a href="{{ path('app_zones_new') }}" class="btn btn-new">
+                <i class="fas fa-plus me-2"></i>
+                Créer une zone
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Animation des cartes
+        document.querySelectorAll('.zone-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Auto-dismiss alerts
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+{% endblock %}

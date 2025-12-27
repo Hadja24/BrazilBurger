@@ -314,10 +314,7 @@
                                                class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ path('app_orders_edit', {'id': order.id}) }}" 
-                                               class="btn btn-sm btn-outline-warning">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                            
                                             {% if order.orderState == constant('App\\Entity\\Orders::STATE_PENDING') %}
                                                 <form method="post" 
                                                       action="{{ path('app_customer_order_cancel', {'id': order.id}) }}" 

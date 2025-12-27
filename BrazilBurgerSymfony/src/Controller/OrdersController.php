@@ -60,24 +60,7 @@ final class OrdersController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_orders_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Orders $order, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(OrdersType::class, $order);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Commande mise à jour avec succès!');
-            return $this->redirectToRoute('app_orders_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('orders/edit.html.twig', [
-            'order' => $order,
-            'form' => $form->createView(),
-        ]);
-    }
 
     #[Route('/{id}/update-state', name: 'app_orders_update_state', methods: ['POST'])]
     public function updateState(Request $request, Orders $order, EntityManagerInterface $entityManager): Response

@@ -187,14 +187,14 @@
                 </div>
                 
                 <div class="nav-item">
-                    <a href="#" class="nav-link {% block nav_zones %}{% endblock %}">
-                        <span class="nav-icon"><i class="bi bi-geo-alt"></i></span>
-                        <span class="nav-text">Zones</span>
+                     <a class="nav-link {% if nav_zones is defined %}active{% endif %}" href="{{ path('app_zones_index') }}">
+                        <i class="fas fa-map-marked-alt me-1"></i>
+                        Zones
                     </a>
                 </div>
                 
                 <div class="nav-item mt-4">
-                    <a href="#" class="nav-link">
+                    <a href="{{ path('app_login') }}" class="nav-link">
                         <span class="nav-icon"><i class="bi bi-box-arrow-right"></i></span>
                         <span class="nav-text">Logout</span>
                     </a>

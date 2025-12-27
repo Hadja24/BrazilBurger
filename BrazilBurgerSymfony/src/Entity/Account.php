@@ -4,10 +4,13 @@ namespace App\Entity;
 
 use App\Repository\AccountRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+
 
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
 #[ORM\Table(name: 'account')]
-class Account
+class Account implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -111,6 +114,21 @@ class Account
         return $this->role;
     }
 
+    public function getRoles(): array
+    {
+        // Si le rôle existe et n'a pas le préfixe ROLE_, l'ajouter
+        $role = $this->role;
+        if ($role) {
+            // Ajoute ROLE_ au début si pas déjà présent
+            if (!str_starts_with($role, 'ROLE_')) {
+                $role = 'ROLE_' . $role;
+            }
+            return [$role];
+        }
+        
+        return [];
+    }
+
     public function setRole(string $role): static
     {
         $this->role = $role;
@@ -167,5 +185,15 @@ class Account
         $this->manager = $manager;
 
         return $this;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Si vous stockez des données sensibles temporaires, nettoyez-les ici
     }
 }
