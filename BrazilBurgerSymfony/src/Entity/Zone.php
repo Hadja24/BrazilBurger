@@ -14,14 +14,14 @@ class Zone
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: "id")]
     private ?int $id = null;
 
 
     #[ORM\Column(name: 'prix_livraison', type: Types::FLOAT, precision: 10, scale: 2, nullable: true)]
     private ?float $deliveryPrice = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(name: "nom", length: 50)]
     private ?string $name = null;
 
     /**

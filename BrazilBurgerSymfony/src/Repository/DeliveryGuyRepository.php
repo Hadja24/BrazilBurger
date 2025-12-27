@@ -16,6 +16,16 @@ class DeliveryGuyRepository extends ServiceEntityRepository
         parent::__construct($registry, DeliveryGuy::class);
     }
 
+    public function findByDeliveryStatus(string $deliveryStatus)
+    {
+        return $this->createQueryBuilder('d')
+            ->innerJoin('d.deliveries', 'o')
+            ->andWhere('o.deliveryStatus = :deliveryStatus')
+            ->setParameter('deliveryStatus', $deliveryStatus)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return DeliveryGuy[] Returns an array of DeliveryGuy objects
     //     */

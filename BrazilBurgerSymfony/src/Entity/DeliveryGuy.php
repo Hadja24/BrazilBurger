@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\DeliveryGuyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: DeliveryGuyRepository::class)]
 #[ORM\Table(name: 'deliveryguy')]
+
 class DeliveryGuy
 {
     #[ORM\Id]
@@ -17,6 +20,9 @@ class DeliveryGuy
     #[ORM\OneToOne(inversedBy: 'deliveryGuy', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Account $account = null;
+
+    #[ORM\OneToMany(targetEntity: Orders::class, mappedBy: 'deliveryGuy')]
+    private Collection $deliveries;
 
     public function getId(): ?int
     {
@@ -34,4 +40,39 @@ class DeliveryGuy
 
         return $this;
     }
+
+    public function __construct()
+    {
+        $this->deliveries = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, Orders>
+     */
+    public function getDeliveries(): Collection
+    {
+        return $this->deliveries;
+    }
+
+    public function addDelivery(Orders $delivery): static
+    {
+        if (!$this->deliveries->contains($delivery)) {
+            $this->deliveries->add($delivery);
+            $delivery->setDeliveryGuy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDelivery(Orders $delivery): static
+    {
+        if ($this->deliveries->removeElement($delivery)) {
+            // set the owning side to null (unless already changed)
+            if ($delivery->getDeliveryGuy() === $this) {
+                $delivery->setDeliveryGuy(null);
+            }
+        }
+
+        return $this;
+    }   
 }

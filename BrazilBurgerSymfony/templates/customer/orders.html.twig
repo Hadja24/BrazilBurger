@@ -1,0 +1,390 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rechercher et gérer les commandes d'un client - Brazil Burger{% endblock %}
+
+{% block nav_customers %}active{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --brazil-green: #009739;
+            --brazil-yellow: #FEDD00;
+            --brazil-blue: #012169;
+            --brazil-white: #FFFFFF;
+            --brazil-gray: #F5F5F5;
+            --brazil-dark: #333333;
+        }
+        
+        .brazil-header {
+            background: linear-gradient(90deg, var(--brazil-green) 0%, var(--brazil-yellow) 50%, var(--brazil-blue) 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        
+        .form-control-search {
+            border-radius: 25px;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control-search:focus {
+            border-color: var(--brazil-green);
+            box-shadow: 0 0 0 0.2rem rgba(0, 151, 57, 0.25);
+        }
+        
+        .btn-brazil {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-radius: 25px;
+            padding: 10px 25px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-brazil {
+            background: linear-gradient(135deg, var(--brazil-green), #00802C);
+            color: white;
+        }
+        
+        .btn-primary-brazil:hover {
+            background: linear-gradient(135deg, #00802C, var(--brazil-green));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 151, 57, 0.3);
+        }
+        
+        .btn-secondary-brazil {
+            background: var(--brazil-gray);
+            color: var(--brazil-dark);
+            border: 2px solid var(--brazil-gray);
+        }
+        
+        .btn-secondary-brazil:hover {
+            background: transparent;
+            border-color: var(--brazil-dark);
+        }
+        
+        .customer-card {
+            background: linear-gradient(135deg, var(--brazil-white), var(--brazil-gray));
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--brazil-green);
+            margin-bottom: 30px;
+        }
+        
+        .customer-header {
+            color: var(--brazil-dark);
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--brazil-gray);
+        }
+        
+        .table-custom {
+            background: var(--brazil-white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .table-custom thead {
+            background: var(--brazil-green);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .table-custom th {
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+        }
+        
+        .table-custom td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        .btn-danger-brazil {
+            background: linear-gradient(135deg, #EF476F, #FF6B6B);
+            color: white;
+            border-radius: 20px;
+            padding: 6px 15px;
+            border: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .btn-danger-brazil:hover {
+            background: linear-gradient(135deg, #FF6B6B, #EF476F);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 71, 111, 0.3);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        
+        .no-results i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <!-- Header avec navigation -->
+    <div class="brazil-header text-center">
+        <h1 class="display-4 mb-0">
+            <i class="fas fa-search me-2"></i>
+            RECHERCHE DE COMMANDES PAR CLIENT
+        </h1>
+        <p class="lead mb-0">Recherchez un client et gérez ses commandes Brazil Burger</p>
+    </div>
+    
+    <!-- Formulaire de recherche -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title" style="color: var(--brazil-dark); font-weight: 700;">
+                <i class="fas fa-user-search me-2"></i>
+                Rechercher un client
+            </h5>
+            <form method="get" action="{{ path('app_customer_orders') }}" class="row g-3">
+                <div class="col-md-4">
+                    <label for="name" class="form-label">Prénom</label>
+                    <input type="text" class="form-control form-control-search" id="name" name="name" 
+                           value="{{ name }}" placeholder="Prénom du client">
+                </div>
+                <div class="col-md-4">
+                    <label for="surname" class="form-label">Nom</label>
+                    <input type="text" class="form-control form-control-search" id="surname" name="surname" 
+                           value="{{ surname }}" placeholder="Nom du client">
+                </div>
+                <div class="col-md-4">
+                    <label for="phone" class="form-label">Téléphone</label>
+                    <input type="text" class="form-control form-control-search" id="phone" name="phone" 
+                           value="{{ phone }}" placeholder="Téléphone du client">
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary-brazil btn-brazil me-2">
+                        <i class="fas fa-search me-2"></i>
+                        Rechercher
+                    </button>
+                    <a href="{{ path('app_customer_orders') }}" class="btn btn-secondary-brazil btn-brazil">
+                        <i class="fas fa-times me-2"></i>
+                        Réinitialiser
+                    </a>
+                    <a href="{{ path('app_customers_index') }}" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-users me-2"></i>
+                        Voir tous les clients
+                    </a>
+                </div>
+                <div class="col-12">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Remplissez au moins un champ pour rechercher un client.
+                    </small>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if customer %}
+        <!-- Informations du client -->
+        <div class="customer-card">
+            <h4 class="customer-header">
+                <i class="fas fa-user-circle me-2"></i>
+                Client : {{ customer.name }} {{ customer.surname }}
+            </h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-2">
+                        <i class="fas fa-phone me-2"></i>
+                        <strong>Téléphone :</strong> {{ customer.phone }}
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-envelope me-2"></i>
+                        <strong>Email :</strong> {{ customer.email }}
+                    </p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="{{ path('app_customers_show', {'id': customer.id}) }}" 
+                       class="btn btn-primary-brazil btn-brazil">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Voir le dashboard complet
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if orders|length > 0 %}
+        <!-- Liste des commandes -->
+        <div class="card shadow-sm">
+            <div class="card-header" style="background: var(--brazil-green); color: white;">
+                <h5 class="mb-0">
+                    <i class="fas fa-shopping-cart me-2"></i>
+                    Commandes du client ({{ orders|length }})
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Type</th>
+                                <th>État Commande</th>
+                                <th>État Livraison</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td class="fw-bold">#{{ order.id }}</td>
+                                    <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
+                                    <td class="fw-bold" style="color: var(--brazil-green);">
+                                        {{ order.totalPrice|number_format(0, ',', ' ') }} FCFA
+                                    </td>
+                                    <td>
+                                        {% if order.receptionType == constant('App\\Entity\\Orders::RECEPTION_DELIVERY') %}
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-truck me-1"></i>
+                                                Livraison
+                                            </span>
+                                        {% elseif order.receptionType == constant('App\\Entity\\Orders::RECEPTION_PICK_UP') %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-bag-shopping me-1"></i>
+                                                À emporter
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-utensils me-1"></i>
+                                                Sur place
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if order.orderState == constant('App\\Entity\\Orders::STATE_PENDING') %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock me-1"></i>
+                                                En attente
+                                            </span>
+                                        {% elseif order.orderState == constant('App\\Entity\\Orders::STATE_FINISHED') %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>
+                                                Terminée
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times me-1"></i>
+                                                Annulée
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if order.receptionType == constant('App\\Entity\\Orders::RECEPTION_DELIVERY') %}
+                                            {% if order.deliveryStatus == constant('App\\Entity\\Orders::DELIVERY_STATUS_PENDING') %}
+                                                <span class="badge bg-warning">En attente</span>
+                                            {% elseif order.deliveryStatus == constant('App\\Entity\\Orders::DELIVERY_STATUS_ONGOING') %}
+                                                <span class="badge bg-info">En cours</span>
+                                            {% elseif order.deliveryStatus == constant('App\\Entity\\Orders::DELIVERY_STATUS_DELIVERED') %}
+                                                <span class="badge bg-success">Livrée</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Annulée</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge bg-secondary">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ path('app_orders_show', {'id': order.id}) }}" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ path('app_orders_edit', {'id': order.id}) }}" 
+                                               class="btn btn-sm btn-outline-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% if order.orderState == constant('App\\Entity\\Orders::STATE_PENDING') %}
+                                                <form method="post" 
+                                                      action="{{ path('app_customer_order_cancel', {'id': order.id}) }}" 
+                                                      style="display: inline;">
+                                                    <input type="hidden" name="_token" 
+                                                           value="{{ csrf_token('cancel' ~ order.id) }}">
+                                                    <button type="submit" 
+                                                            class="btn btn-sm btn-danger-brazil"
+                                                            onclick="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?')">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% elseif name or surname or phone %}
+        <!-- Aucun résultat -->
+        <div class="no-results">
+            <i class="fas fa-user-slash"></i>
+            <h4 class="mb-3">Aucun résultat trouvé</h4>
+            <p class="text-muted mb-4">
+                {% if customer %}
+                    Ce client n'a pas encore passé de commande.
+                {% else %}
+                    Aucun client ne correspond aux critères de recherche.
+                {% endif %}
+            </p>
+            <a href="{{ path('app_customer_orders') }}" class="btn btn-primary-brazil btn-brazil">
+                <i class="fas fa-redo me-2"></i>
+                Nouvelle recherche
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Animation des boutons
+        document.querySelectorAll('.btn-brazil').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Focus sur le premier champ de recherche
+        document.querySelector('.form-control-search').focus();
+        
+        // Confirmation avant annulation
+        document.querySelectorAll('.btn-danger-brazil').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!confirm('Êtes-vous sûr de vouloir annuler cette commande ? Cette action est irréversible.')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+{% endblock %}

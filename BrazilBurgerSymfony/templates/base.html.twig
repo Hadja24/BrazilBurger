@@ -159,30 +159,30 @@
                 </div>
                 
                 <div class="nav-item">
-                    <a href="#" class="nav-link {% block nav_catalog %}{% endblock %}">
+                    <a href="{{ path('app_catalogue') }}" class="nav-link {% block nav_catalog %}{% endblock %}">
                         <span class="nav-icon"><i class="bi bi-basket"></i></span>
                         <span class="nav-text">Catalog</span>
                     </a>
                 </div>
                 
                 <div class="nav-item">
-                    <a href="#" class="nav-link {% block nav_orders %}{% endblock %}">
+                    <a href="{{ path('app_orders_index') }}" class="nav-link {% block nav_orders %}{% endblock %}">
                         <span class="nav-icon"><i class="bi bi-receipt"></i></span>
                         <span class="nav-text">Orders</span>
                     </a>
                 </div>
                 
                 <div class="nav-item">
-                    <a href="#" class="nav-link {% block nav_delivery %}{% endblock %}">
+                    <a href="{{ path('app_delivery_index') }}" class="nav-link {% block nav_delivery %}{% endblock %}">
                         <span class="nav-icon"><i class="bi bi-truck"></i></span>
                         <span class="nav-text">Delivery</span>
                     </a>
                 </div>
                 
                 <div class="nav-item">
-                    <a href="#" class="nav-link {% block nav_clients %}{% endblock %}">
-                        <span class="nav-icon"><i class="bi bi-people"></i></span>
-                        <span class="nav-text">Clients</span>
+                    <a class="nav-link {% if nav_customers is defined %}active{% endif %}" href="{{ path('app_customers_index') }}">
+                        <i class="fas fa-users me-1"></i>
+                        Clients
                     </a>
                 </div>
                 

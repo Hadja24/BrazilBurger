@@ -1,0 +1,573 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Client - {{ customer.name }} {{ customer.surname }} - Brazil Burger{% endblock %}
+
+{% block nav_customers %}active{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --brazil-green: #009739;
+            --brazil-yellow: #FEDD00;
+            --brazil-blue: #012169;
+            --brazil-white: #FFFFFF;
+            --brazil-gray: #F5F5F5;
+            --brazil-dark: #333333;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--brazil-blue), var(--brazil-green));
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .customer-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
+            color: var(--brazil-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+        
+        .stat-card {
+            background: var(--brazil-white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 5px solid var(--brazil-green);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card i {
+            font-size: 32px;
+            color: var(--brazil-green);
+            margin-bottom: 15px;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--brazil-dark);
+            display: block;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+        
+        .orders-table {
+            background: var(--brazil-white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .orders-table thead {
+            background: var(--brazil-green);
+            color: white;
+        }
+        
+        .orders-table th {
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+        }
+        
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        .state-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .state-pending {
+            background: linear-gradient(135deg, #FFD166, #FFB347);
+            color: #8A5700;
+        }
+        
+        .state-cancelled {
+            background: linear-gradient(135deg, #EF476F, #FF6B6B);
+            color: white;
+        }
+        
+        .state-finished {
+            background: linear-gradient(135deg, #06D6A0, #0CB48A);
+            color: white;
+        }
+        
+        .btn-cancel-order {
+            background: linear-gradient(135deg, #EF476F, #FF6B6B);
+            color: white;
+            border-radius: 20px;
+            padding: 6px 15px;
+            border: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .btn-cancel-order:hover {
+            background: linear-gradient(135deg, #FF6B6B, #EF476F);
+            transform: translateY(-2px);
+        }
+        
+        .no-orders {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-dashboard {
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back {
+            background: var(--brazil-gray);
+            color: var(--brazil-dark);
+            border: 2px solid var(--brazil-gray);
+        }
+        
+        .btn-back:hover {
+            background: transparent;
+            border-color: var(--brazil-dark);
+        }
+        
+        .btn-search-again {
+            background: linear-gradient(135deg, var(--brazil-blue), #1A3A8F);
+            color: white;
+            border: none;
+        }
+        
+        .btn-search-again:hover {
+            background: linear-gradient(135deg, #1A3A8F, var(--brazil-blue));
+            transform: translateY(-2px);
+        }
+        
+        .info-section {
+            background: var(--brazil-white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .info-title {
+            color: var(--brazil-dark);
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--brazil-gray);
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-item i {
+            width: 30px;
+            color: var(--brazil-green);
+        }
+        
+        @media (max-width: 768px) {
+            .customer-avatar-large {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
+                margin: 0 auto 15px;
+            }
+            
+            .dashboard-header {
+                text-align: center;
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <!-- Header du dashboard -->
+    <div class="dashboard-header">
+        <div class="d-flex align-items-center flex-wrap">
+            <div class="customer-avatar-large">
+                {{ customer.name|first|upper }}{{ customer.surname|first|upper }}
+            </div>
+            <div>
+                <h1 class="mb-2">{{ customer.name }} {{ customer.surname }}</h1>
+                <p class="mb-1">
+                    <i class="fas fa-phone me-2"></i>
+                    {{ customer.phone }}
+                </p>
+                <p class="mb-0">
+                    <i class="fas fa-envelope me-2"></i>
+                    {{ customer.email }}
+                </p>
+            </div>
+        </div>
+        
+        <div class="action-buttons mt-4">
+            <a href="{{ path('app_customers_index') }}" class="btn btn-back btn-dashboard">
+                <i class="fas fa-arrow-left me-2"></i>
+                Retour à la liste
+            </a>
+            <a href="{{ path('app_customers_search') }}" class="btn btn-search-again btn-dashboard">
+                <i class="fas fa-search me-2"></i>
+                Rechercher un autre client
+            </a>
+        </div>
+    </div>
+    
+    <!-- Statistiques -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="stat-number">{{ stats.total_orders }}</span>
+                <span class="stat-label">Commandes totales</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-money-bill-wave"></i>
+                <span class="stat-number">{{ stats.total_spent|number_format(0, ',', ' ') }} FCFA</span>
+                <span class="stat-label">Total dépensé</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <span class="stat-number">{{ stats.pending_orders }}</span>
+                <span class="stat-label">Commandes en attente</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <span class="stat-number">{{ stats.finished_orders }}</span>
+                <span class="stat-label">Commandes terminées</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Informations client -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="info-section">
+                <h4 class="info-title">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Informations client
+                </h4>
+                <div class="info-item">
+                    <i class="fas fa-user"></i>
+                    <span><strong>Nom complet :</strong> {{ customer.name }} {{ customer.surname }}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <span><strong>Téléphone :</strong> {{ customer.phone }}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <span><strong>Email :</strong> {{ customer.email }}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar"></i>
+                    <span><strong>Client depuis :</strong> 
+                        {% if orders|length > 0 %}
+                            {% set firstOrder = orders|sort((a, b) => a.orderDate <=> b.orderDate)|first %}
+                            {{ firstOrder.orderDate|date('d/m/Y') }}
+                        {% else %}
+                            Pas encore de commande
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dernières commandes (mini tableau) -->
+        <div class="col-md-8">
+            <div class="info-section">
+                <h4 class="info-title">
+                    <i class="fas fa-history me-2"></i>
+                    Dernières commandes
+                </h4>
+                {% if orders|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Montant</th>
+                                    <th>Type</th>
+                                    <th>État</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders|slice(0, 5) %}
+                                    <tr>
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
+                                        <td>{{ order.totalPrice|number_format(0, ',', ' ') }} FCFA</td>
+                                        <td>
+                                            {% if order.receptionType == 'DELIVERY' %}
+                                                <span class="state-badge state-pending">
+                                                    <i class="fas fa-truck me-1"></i>
+                                                    Livraison
+                                                </span>
+                                            {% elseif order.receptionType == 'PICK_UP' %}
+                                                <span class="state-badge state-cancelled">
+                                                    <i class="fas fa-bag me-1"></i>
+                                                    À emporter
+                                                </span>
+                                            {% else %}
+                                                <span class="state-badge state-finished">
+                                                    <i class="fas fa-shop me-1"></i>
+                                                    Sur place
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if order.orderState == 'PENDING' %}
+                                                <span class="badge bg-warning">En attente</span>
+                                            {% elseif order.orderState == 'CANCELLED' %}
+                                                <span class="badge bg-danger">Annulée</span>
+                                            {% elseif order.orderState == 'FINISHED' %}
+                                                <span class="badge bg-success">Terminée</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('app_orders_show', {'id': order.id}) }}" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if order.orderState == 'PENDING' %}
+                                                <form method="POST" 
+                                                      action="{{ path('app_customers_cancel_order', {
+                                                          'customerId': customer.id,
+                                                          'orderId': order.id
+                                                      }) }}" 
+                                                      style="display: inline;"
+                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?')">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ order.id) }}">
+                                                    <button type="submit" class="btn btn-sm btn-cancel-order">
+                                                        <i class="fas fa-times"></i>
+                                                        Annuler
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if orders|length > 5 %}
+                        <div class="text-center mt-3">
+                            <a href="#all-orders" class="btn btn-outline-secondary">
+                                Voir toutes les commandes ({{ orders|length }})
+                            </a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Ce client n'a pas encore passé de commande.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toutes les commandes -->
+    <div class="info-section" id="all-orders">
+        <h4 class="info-title">
+            <i class="fas fa-list-alt me-2"></i>
+            Toutes les commandes ({{ orders|length }})
+        </h4>
+        
+        {% if orders|length > 0 %}
+            <div class="table-responsive">
+                <table class="table orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Type</th>
+                            <th>État</th>
+                            <th>Livraison</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td class="fw-bold">#{{ order.id }}</td>
+                                <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
+                                <td class="fw-bold text-success">
+                                    {{ order.totalPrice|number_format(0, ',', ' ') }} FCFA
+                                </td>
+                                <td>
+                                    {% if order.receptionType == 'DELIVERY' %}
+                                        <span class="badge bg-info">
+                                            <i class="fas fa-truck me-1"></i>
+                                            Livraison
+                                        </span>
+                                    {% elseif order.receptionType == 'PICK_UP' %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-bag-shopping me-1"></i>
+                                            À emporter
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-utensils me-1"></i>
+                                            Sur place
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if order.orderState == 'PENDING' %}
+                                        <span class="badge bg-warning">En attente</span>
+                                    {% elseif order.orderState == 'CANCELLED' %}
+                                        <span class="badge bg-danger">Annulée</span>
+                                    {% elseif order.orderState == 'FINISHED' %}
+                                        <span class="badge bg-success">Terminée</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if order.deliveryStatus %}
+                                        <span class="badge bg-secondary">
+                                            {{ order.deliveryStatus }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ path('app_orders_show', {'id': order.id}) }}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ path('app_orders_edit', {'id': order.id}) }}" 
+                                           class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% if order.orderState == 'PENDING' %}
+                                            <form method="POST" 
+                                                  action="{{ path('app_customers_cancel_order', {
+                                                      'customerId': customer.id,
+                                                      'orderId': order.id
+                                                  }) }}" 
+                                                  style="display: inline;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ order.id) }}">
+                                                <button type="submit" 
+                                                        class="btn btn-sm btn-cancel-order"
+                                                        onclick="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?')">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="no-orders">
+                <i class="fas fa-shopping-cart fa-4x mb-3 text-muted"></i>
+                <h4 class="text-muted">Aucune commande trouvée</h4>
+                <p class="text-muted">Ce client n'a pas encore passé de commande chez Brazil Burger.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Animation des cartes de statistiques
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Confirmation avant annulation de commande
+        document.querySelectorAll('.btn-cancel-order').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!confirm('Êtes-vous sûr de vouloir annuler cette commande ? Cette action est irréversible.')) {
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        // Scroll doux vers la section des commandes
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

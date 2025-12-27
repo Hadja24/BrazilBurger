@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annuler la commande #{{ order.id }}{% endblock %}
+
+{% block body %}
+    <h1>Annuler la commande #{{ order.id }}</h1>
+
+    <p>Êtes-vous sûr de vouloir annuler la commande du client {{ order.customer.account.name }} {{ order.customer.account.surname }} ?</p>
+
+    {{ form_start(form) }}
+        <button type="submit" class="btn btn-danger">Confirmer l'annulation</button>
+        <a href="{{ path('app_customer_orders') }}" class="btn btn-secondary">Retour</a>
+    {{ form_end(form) }}
+{% endblock %}

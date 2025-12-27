@@ -1,0 +1,216 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Performance du Livreur - Brazil Burger{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- En-tête avec informations du livreur -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-1">{{ deliveryGuy.account.name }} {{ deliveryGuy.account.surname }}</h2>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-phone"></i> {{ deliveryGuy.account.phone }} |
+                                <i class="fas fa-envelope"></i> {{ deliveryGuy.account.email }}
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <a href="{{ path('app_delivery_delivery_guys') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Retour à la liste
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiques principales -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Livraisons</h5>
+                            <p class="card-text display-6">{{ stats.total_deliveries ?? 0 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <h5 class="card-title">Livrées</h5>
+                            <p class="card-text display-6">{{ stats.delivered ?? 0 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-info">
+                        <div class="card-body">
+                            <h5 class="card-title">En cours</h5>
+                            <p class="card-text display-6">{{ stats.ongoing ?? 0 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <h5 class="card-title">Note moyenne</h5>
+                            <p class="card-text display-6">
+                                {% if stats.avg_rating %}
+                                    {{ stats.avg_rating|number_format(1) }}/5
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Détails des statistiques -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Statistiques détaillées</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <tr>
+                                    <td>Revenu total généré :</td>
+                                    <td><strong>{{ stats.total_revenue ?? 0 }} €</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Livraisons annulées :</td>
+                                    <td><span class="badge bg-danger">{{ stats.cancelled ?? 0 }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Meilleure note :</td>
+                                    <td>
+                                        {% if stats.max_rating %}
+                                            {% for i in 1..5 %}
+                                                {% if i <= stats.max_rating %}
+                                                    <i class="fas fa-star text-warning"></i>
+                                                {% else %}
+                                                    <i class="far fa-star text-warning"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            ({{ stats.max_rating }}/5)
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Note minimale :</td>
+                                    <td>
+                                        {% if stats.min_rating %}
+                                            {% for i in 1..5 %}
+                                                {% if i <= stats.min_rating %}
+                                                    <i class="fas fa-star text-warning"></i>
+                                                {% else %}
+                                                    <i class="far fa-star text-warning"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            ({{ stats.min_rating }}/5)
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Répartition des livraisons</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Placeholder pour un graphique (vous pouvez utiliser Chart.js) -->
+                            <div class="text-center">
+                                <p class="text-muted">Graphique de répartition (à implémenter)</p>
+                                <div style="height: 200px; background-color: #f8f9fa; border-radius: 5px; 
+                                            display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-chart-pie fa-3x text-secondary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dernières livraisons -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Dernières livraisons</h5>
+                </div>
+                <div class="card-body">
+                    {% if recentDeliveries|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID Commande</th>
+                                        <th>Date</th>
+                                        <th>Client</th>
+                                        <th>Zone</th>
+                                        <th>Montant</th>
+                                        <th>Statut</th>
+                                        <th>Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in recentDeliveries %}
+                                        <tr>
+                                            <td>#{{ order.id }}</td>
+                                            <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
+                                            <td>{{ order.customer.account.name }}</td>
+                                            <td>
+                                                {% if order.zone %}
+                                                    <span class="badge bg-info">{{ order.zone.name }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ order.totalPrice }} €</td>
+                                            <td>
+                                                {% if order.deliveryStatus == constant('App\\Entity\\Orders::DELIVERY_STATUS_DELIVERED') %}
+                                                    <span class="badge bg-success">Livrée</span>
+                                                {% elseif order.deliveryStatus == constant('App\\Entity\\Orders::DELIVERY_STATUS_ONGOING') %}
+                                                    <span class="badge bg-info">En cours</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning">{{ order.deliveryStatus }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if order.deliveryRating %}
+                                                    {% for i in 1..5 %}
+                                                        {% if i <= order.deliveryRating %}
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        {% else %}
+                                                            <i class="far fa-star text-warning"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <br>
+                                                    <small class="text-muted">{{ order.deliveryRating }}/5</small>
+                                                {% else %}
+                                                    <span class="text-muted">Pas noté</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            Aucune livraison récente pour ce livreur.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

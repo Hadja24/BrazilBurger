@@ -15,7 +15,7 @@ class Manager
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'manager', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: "account_id", nullable: false)]
     private ?Account $account = null;
 
     public function getId(): ?int

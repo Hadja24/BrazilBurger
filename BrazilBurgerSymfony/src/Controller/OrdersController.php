@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/orders')]
 final class OrdersController extends AbstractController
@@ -74,7 +75,7 @@ final class OrdersController extends AbstractController
 
         return $this->render('orders/edit.html.twig', [
             'order' => $order,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -107,5 +108,18 @@ final class OrdersController extends AbstractController
         }
 
         return $this->redirectToRoute('app_orders_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/mark-delivered', name: 'app_orders_mark_delivered', methods: ['POST'])]
+    public function markAsDelivered(Orders $order, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $order->setDeliveryStatus(Orders::DELIVERY_STATUS_DELIVERED);
+        $order->setDeliveryCompletedAt(new \DateTimeImmutable());
+        $entityManager->flush();
+        
+        return $this->json([
+            'success' => true,
+            'message' => 'Commande marquée comme livrée'
+        ]);
     }
 }

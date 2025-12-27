@@ -34,9 +34,60 @@ class CustomerRepository extends ServiceEntityRepository
             return 0;
         }
     }
+
+    public function findAllOrderedByName()
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.account', 'a')
+            ->orderBy('a.name', 'ASC')
+            ->addOrderBy('a.surname', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     
     public function getTotalCustomers(): int
     {
         return $this->count([]);
     }
+
+    // Ajouter cette méthode dans src/Repository/CustomerRepository.php
+// Ajouter cette méthode dans src/Repository/CustomerRepository.php
+public function findOneByFuzzySearch(?string $name = null, ?string $surname = null, ?string $phone = null): ?Customer
+{
+    $qb = $this->createQueryBuilder('c')
+        ->join('c.account', 'a');
+
+    $conditions = [];
+    $parameters = [];
+
+    if ($name) {
+        $conditions[] = 'a.name LIKE :name';
+        $parameters['name'] = '%' . $name . '%';
+    }
+
+    if ($surname) {
+        $conditions[] = 'a.surname LIKE :surname';
+        $parameters['surname'] = '%' . $surname . '%';
+    }
+
+    if ($phone) {
+        $conditions[] = 'a.phone LIKE :phone';
+        $parameters['phone'] = '%' . $phone . '%';
+    }
+
+    // Si aucun critère n'est fourni, retourner null
+    if (empty($conditions)) {
+        return null;
+    }
+
+    // Appliquer toutes les conditions avec AND
+    $qb->where(implode(' AND ', $conditions));
+    
+    // Définir les paramètres
+    foreach ($parameters as $key => $value) {
+        $qb->setParameter($key, $value);
+    }
+
+    return $qb->getQuery()->getOneOrNullResult();
+}
 }

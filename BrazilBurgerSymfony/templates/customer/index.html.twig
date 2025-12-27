@@ -1,0 +1,311 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clients - Brazil Burger{% endblock %}
+
+{% block nav_customers %}active{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --brazil-green: #009739;
+            --brazil-yellow: #FEDD00;
+            --brazil-blue: #012169;
+            --brazil-white: #FFFFFF;
+            --brazil-gray: #F5F5F5;
+            --brazil-dark: #333333;
+        }
+        
+        .brazil-header {
+            background: linear-gradient(90deg, var(--brazil-green) 0%, var(--brazil-yellow) 50%, var(--brazil-blue) 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        
+        .customer-card {
+            background: var(--brazil-white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .customer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+            border-color: var(--brazil-green);
+        }
+        
+        .customer-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--brazil-blue), var(--brazil-green));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+        
+        .customer-info h4 {
+            color: var(--brazil-dark);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .customer-stats {
+            background: var(--brazil-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--brazil-green);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-customer-dashboard {
+            background: linear-gradient(135deg, var(--brazil-blue), #1A3A8F);
+            color: white;
+            border-radius: 25px;
+            padding: 8px 20px;
+            border: none;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-customer-dashboard:hover {
+            background: linear-gradient(135deg, #1A3A8F, var(--brazil-blue));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 58, 143, 0.3);
+        }
+        
+        .search-section {
+            background: var(--brazil-white);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .search-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--brazil-dark);
+            margin-bottom: 20px;
+        }
+        
+        .form-control-search {
+            border-radius: 25px;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control-search:focus {
+            border-color: var(--brazil-green);
+            box-shadow: 0 0 0 0.2rem rgba(0, 151, 57, 0.25);
+        }
+        
+        .btn-search {
+            background: linear-gradient(135deg, var(--brazil-green), #00802C);
+            color: white;
+            border-radius: 25px;
+            padding: 12px 30px;
+            border: none;
+            font-weight: 600;
+        }
+        
+        .btn-search:hover {
+            background: linear-gradient(135deg, #00802C, var(--brazil-green));
+            transform: translateY(-2px);
+        }
+        
+        .no-customers {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        
+        .no-customers i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .customer-card {
+                padding: 20px;
+            }
+            
+            .customer-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <!-- Header avec navigation -->
+    <div class="brazil-header text-center">
+        <h1 class="display-4 mb-0">
+            <i class="fas fa-users me-2"></i>
+            GESTION DES CLIENTS
+        </h1>
+        <p class="lead mb-0">Gérez et suivez vos clients Brazil Burger</p>
+    </div>
+    
+    <!-- Section de recherche rapide -->
+    <div class="search-section">
+        <h3 class="search-title">
+            <i class="fas fa-search me-2"></i>
+            Recherche rapide de client
+        </h3>
+        <form action="{{ path('app_customers_search') }}" method="GET" class="row g-3">
+            <div class="col-md-4">
+                <input type="text" name="name" class="form-control form-control-search" 
+                       placeholder="Prénom du client" value="{{ app.request.query.get('name') }}">
+            </div>
+            <div class="col-md-4">
+                <input type="text" name="surname" class="form-control form-control-search" 
+                       placeholder="Nom du client" value="{{ app.request.query.get('surname') }}">
+            </div>
+            <div class="col-md-4">
+                <input type="text" name="phone" class="form-control form-control-search" 
+                       placeholder="Téléphone" value="{{ app.request.query.get('phone') }}">
+            </div>
+            <div class="col-12 text-center mt-3">
+                <button type="submit" class="btn btn-search">
+                    <i class="fas fa-search me-2"></i>
+                    Rechercher le client
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Liste des clients -->
+    <h2 class="mb-4" style="color: var(--brazil-dark); font-weight: 700;">
+        <i class="fas fa-list me-2"></i>
+        Tous les clients ({{ customers|length }})
+    </h2>
+    
+    {% if customers|length > 0 %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for customer in customers %}
+                <div class="col">
+                    <div class="customer-card">
+                        <div class="customer-avatar">
+                            {{ customer.name|first|upper }}{{ customer.surname|first|upper }}
+                        </div>
+                        
+                        <div class="customer-info text-center">
+                            <h4>{{ customer.name }} {{ customer.surname }}</h4>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-phone me-2"></i>
+                                {{ customer.phone }}
+                            </p>
+                            <p class="text-muted mb-3">
+                                <i class="fas fa-envelope me-2"></i>
+                                {{ customer.email }}
+                            </p>
+                            
+                            <div class="customer-stats">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="stat-item">
+                                            <span class="stat-number">{{ customer.orders|length }}</span>
+                                            <span class="stat-label">Commandes</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="stat-item">
+                                            <span class="stat-number">
+                                                {% set totalSpent = 0 %}
+                                                {% for order in customer.orders %}
+                                                    {% set totalSpent = totalSpent + order.totalPrice %}
+                                                {% endfor %}
+                                                {{ totalSpent|number_format(0, ',', ' ') }} FCFA
+                                            </span>
+                                            <span class="stat-label">Dépensé</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <a href="{{ path('app_customers_show', {'id': customer.id}) }}" 
+                                   class="btn btn-customer-dashboard">
+                                    <i class="fas fa-chart-line me-2"></i>
+                                    Voir le dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-customers">
+            <i class="fas fa-users-slash"></i>
+            <h3 class="mb-3">Aucun client trouvé</h3>
+            <p class="text-muted mb-4">Commencez par inscrire vos premiers clients !</p>
+            <a href="#" class="btn btn-primary">
+                <i class="fas fa-user-plus me-2"></i>
+                Ajouter un client
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Animation des cartes clients
+        document.querySelectorAll('.customer-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Focus sur le premier champ de recherche
+        document.querySelector('.form-control-search').focus();
+        
+        // Confirmation avant suppression (si ajouté plus tard)
+        document.querySelectorAll('.btn-danger').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+{% endblock %}

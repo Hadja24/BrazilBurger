@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Complément - Brazil Burger{% endblock %}
+
+{% block nav_catalog %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <!-- Navigation retour -->
+    <div class="mb-4">
+        <a href="{{ path('app_catalogue') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour au catalogue
+        </a>
+    </div>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Nouveau Complément</h1>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" action="{{ path('app_catalogue_extra_new') }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Nom du Complément *</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label">Prix (XOF) *</label>
+                                <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="imageUrl" class="form-label">URL de l'image *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-link-45deg"></i>
+                                    </span>
+                                    <input type="url" class="form-control" id="imageUrl" name="imageUrl" 
+                                           placeholder="https://res.cloudinary.com/..." required>
+                                </div>
+                                <small class="text-muted">Frites, boissons, sauces, etc.</small>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-plus-circle"></i> Ajouter le Complément
+                                </button>
+                                <a href="{{ path('app_catalogue') }}" class="btn btn-secondary">Annuler</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Types de compléments</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-info-circle"></i> Exemples de compléments</h6>
+                        <ul class="mb-0">
+                            <li><strong>Frites</strong> - Accompanement classique</li>
+                            <li><strong>Boissons</strong> - Coca-Cola, Jus, etc.</li>
+                            <li><strong>Sauces</strong> - Ketchup, Mayo, Barbecue</li>
+                            <li><strong>Salades</strong> - Salade verte, Cole slaw</li>
+                            <li><strong>Desserts</strong> - Glace, Beignets</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <h6><i class="bi bi-exclamation-triangle"></i> Conseils prix</h6>
+                        <ul class="mb-0">
+                            <li>Les frites : 500-1500 XOF</li>
+                            <li>Boissons : 800-2000 XOF</li>
+                            <li>Sauces : 200-500 XOF</li>
+                            <li>Adaptez au marché local</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

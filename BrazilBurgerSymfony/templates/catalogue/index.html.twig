@@ -1,0 +1,336 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue - Brazil Burger{% endblock %}
+
+{% block nav_catalog %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <!-- Header avec bouton d'ajout -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Catalogue des Produits</h1>
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="bi bi-plus-circle"></i> Ajouter un produit
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ path('app_catalogue_burger_new') }}">Nouveau Burger</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_catalogue_menu_new') }}">Nouveau Menu</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_catalogue_extra_new') }}">Nouveau Complément</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Rechercher..." id="searchInput">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" id="categoryFilter">
+                        <option value="">Tous les produits</option>
+                        <option value="burger">Burgers</option>
+                        <option value="menu">Menus</option>
+                        <option value="extra">Compléments</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-secondary w-100" onclick="applyFilters()">
+                        <i class="bi bi-funnel"></i> Filtrer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Burgers -->
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0"><i class="bi bi-burger"></i> Burgers</h2>
+            <span class="badge bg-light text-danger">{{ burgers|length }}</span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for burger in burgers %}
+                <div class="col-md-4 col-lg-3 mb-4 burger-item">
+                    <div class="card h-100 border-0 shadow-sm product-card">
+                        <div class="position-relative">
+                            <div class="card-img-top text-center p-3" style="height: 150px; overflow: hidden; background: #f8f9fa;">
+                                <img src="{{ burger.imageUrl }}" 
+                                     alt="{{ burger.name }}" 
+                                     class="img-fluid" 
+                                     style="max-height: 100%; object-fit: cover; border-radius: 8px;">
+                            </div>
+                            {% if burger.archived %}
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-warning">Archivé</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">{{ burger.name }}</h5>
+                            <p class="card-text text-danger fw-bold fs-5 mb-0">{{ burger.price|format_currency('XOF') }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 pt-0">
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ path('app_catalogue_burger_edit', {'id': burger.id}) }}" 
+                                   class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" 
+                                      action="{{ path('app_catalogue_burger_archive', {'id': burger.id}) }}"
+                                      onsubmit="return confirm('Archiver ce burger ?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-archive"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <i class="bi bi-info-circle"></i> Aucun burger disponible
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Menus -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0"><i class="bi bi-collection"></i> Menus</h2>
+            <span class="badge bg-light text-success">{{ menus|length }}</span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for menu in menus %}
+                <div class="col-md-4 col-lg-3 mb-4 menu-item">
+                    <div class="card h-100 border-0 shadow-sm product-card">
+                        <div class="position-relative">
+                            <div class="card-img-top text-center p-3" style="height: 150px; overflow: hidden; background: #f8f9fa;">
+                                <img src="{{ menu.imageUrl }}" 
+                                     alt="{{ menu.name }}" 
+                                     class="img-fluid" 
+                                     style="max-height: 100%; object-fit: cover; border-radius: 8px;">
+                            </div>
+                            {% if menu.archived %}
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-warning">Archivé</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">{{ menu.name }}</h5>
+                            <p class="card-text text-success fw-bold fs-5 mb-2">{{ menu.price|format_currency('XOF') }}</p>
+                            <div class="small text-muted">
+                                <div class="d-flex align-items-center mb-1">
+                                    <i class="bi bi-list-check me-2"></i>
+                                    <span class="fw-medium">Composition :</span>
+                                </div>
+                                {% for burger in menu.burgers %}
+                                    <div class="d-flex justify-content-between">
+                                        <span>• {{ burger.name }}</span>
+                                        <span class="text-muted">{{ burger.price|format_currency('XOF') }}</span>
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">Aucun burger</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 pt-0">
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ path('app_catalogue_menu_edit', {'id': menu.id}) }}" 
+                                   class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" 
+                                      action="{{ path('app_catalogue_menu_archive', {'id': menu.id}) }}"
+                                      onsubmit="return confirm('Archiver ce menu ?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-archive"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <i class="bi bi-info-circle"></i> Aucun menu disponible
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Compléments -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0"><i class="bi bi-cup-straw"></i> Compléments</h2>
+            <span class="badge bg-light text-warning">{{ extras|length }}</span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for extra in extras %}
+                <div class="col-md-4 col-lg-3 mb-4 extra-item">
+                    <div class="card h-100 border-0 shadow-sm product-card">
+                        <div class="position-relative">
+                            <div class="card-img-top text-center p-3" style="height: 150px; overflow: hidden; background: #f8f9fa;">
+                                <img src="{{ extra.imageUrl }}" 
+                                     alt="{{ extra.name }}" 
+                                     class="img-fluid" 
+                                     style="max-height: 100%; object-fit: cover; border-radius: 8px;">
+                            </div>
+                            {% if extra.archived %}
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-warning">Archivé</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">{{ extra.name }}</h5>
+                            <p class="card-text text-warning fw-bold fs-5 mb-0">{{ extra.price|format_currency('XOF') }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 pt-0">
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ path('app_catalogue_extra_edit', {'id': extra.id}) }}" 
+                                   class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" 
+                                      action="{{ path('app_catalogue_extra_archive', {'id': extra.id}) }}"
+                                      onsubmit="return confirm('Archiver ce complément ?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-archive"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <i class="bi bi-info-circle"></i> Aucun complément disponible
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Éléments du DOM
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const filterButton = document.querySelector('.btn-outline-secondary');
+    
+    // Vérifier que les éléments existent
+    if (!searchInput || !categoryFilter) {
+        console.error('Éléments de filtre non trouvés');
+        return;
+    }
+    
+    // Fonction pour appliquer les filtres
+    function applyFilters() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const category = categoryFilter.value;
+        
+        // Récupérer tous les items de produit
+        const burgerItems = document.querySelectorAll('.burger-item');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const extraItems = document.querySelectorAll('.extra-item');
+        
+        // Combiner tous les items
+        const allItems = [...burgerItems, ...menuItems, ...extraItems];
+        
+        allItems.forEach(item => {
+            // Vérifier la catégorie
+            const itemCategory = item.classList.contains('burger-item') ? 'burger' :
+                                item.classList.contains('menu-item') ? 'menu' : 'extra';
+            
+            // Vérifier la recherche
+            const productName = item.querySelector('.card-title').textContent.toLowerCase();
+            const productDescription = item.querySelector('.card-text')?.textContent.toLowerCase() || '';
+            
+            // Appliquer les filtres
+            let shouldShow = true;
+            
+            // Filtre par catégorie
+            if (category && category !== itemCategory) {
+                shouldShow = false;
+            }
+            
+            // Filtre par recherche
+            if (searchTerm && !productName.includes(searchTerm) && !productDescription.includes(searchTerm)) {
+                shouldShow = false;
+            }
+            
+            // Afficher ou masquer l'élément
+            item.style.display = shouldShow ? 'block' : 'none';
+        });
+        
+        // Mettre à jour les compteurs
+        updateCounters();
+    }
+    
+    // Fonction pour mettre à jour les compteurs
+    function updateCounters() {
+        const visibleBurgers = document.querySelectorAll('.burger-item[style*="block"], .burger-item:not([style*="none"])').length;
+        const visibleMenus = document.querySelectorAll('.menu-item[style*="block"], .menu-item:not([style*="none"])').length;
+        const visibleExtras = document.querySelectorAll('.extra-item[style*="block"], .extra-item:not([style*="none"])').length;
+        
+        // Mettre à jour les badges si existent
+        const burgerBadge = document.querySelector('.card-header.bg-danger .badge');
+        const menuBadge = document.querySelector('.card-header.bg-success .badge');
+        const extraBadge = document.querySelector('.card-header.bg-warning .badge');
+        
+        if (burgerBadge) burgerBadge.textContent = visibleBurgers;
+        if (menuBadge) menuBadge.textContent = visibleMenus;
+        if (extraBadge) extraBadge.textContent = visibleExtras;
+    }
+    
+    // Événements
+    searchInput.addEventListener('input', function() {
+        applyFilters();
+    });
+    
+    categoryFilter.addEventListener('change', function() {
+        applyFilters();
+    });
+    
+    if (filterButton) {
+        filterButton.addEventListener('click', applyFilters);
+    }
+    
+    // Appliquer les filtres au chargement
+    applyFilters();
+    
+    // Debug: vérifier que les éléments sont bien attachés
+    console.log('Filtres initialisés:', {
+        searchInput: searchInput !== null,
+        categoryFilter: categoryFilter !== null,
+        totalItems: document.querySelectorAll('.burger-item, .menu-item, .extra-item').length
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

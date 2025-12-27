@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livraisons - Brazil Burger{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Gestion des Livraisons</h1>
+
+    <!-- Filtres par zone et statut -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Filtrer les commandes</h5>
+            <form method="get" action="{{ path('app_delivery_index') }}" class="row g-3">
+                <div class="col-md-4">
+                    <label for="zone" class="form-label">Zone de livraison</label>
+                    <select class="form-select" id="zone" name="zone">
+                        <option value="">Toutes les zones</option>
+                        {% for zone in zones %}
+                            <option value="{{ zone.id }}" {{ selectedZone == zone.id ? 'selected' : '' }}>
+                                {{ zone.name }} - {{ zone.deliveryPrice }} FCFA
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="status" class="form-label">Statut de livraison</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">Tous les statuts</option>
+                        {% for key, label in deliveryStatuses %}
+                            <option value="{{ key }}" {{ selectedStatus == key ? 'selected' : '' }}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4 align-self-end">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                    <a href="{{ path('app_delivery_index') }}" class="btn btn-secondary">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Liste des commandes à livrer -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Commandes à livrer</h5>
+        </div>
+        <div class="card-body">
+            {% if orders|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Client</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Zone</th>
+                                <th>État Livraison</th>
+                                <th>Livreur</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>#{{ order.id }}</td>
+                                <td>
+                                    {% if order.customer and order.customer.account %}
+                                        {{ order.customer.account.name }} {{ order.customer.account.surname }}
+                                    {% else %}
+                                        Client inconnu
+                                    {% endif %}
+                                </td>
+                                <td>{{ order.totalPrice|number_format(0, ',', ' ') }} FCFA</td>
+                                <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    {% if order.zone %}
+                                        {{ order.zone.name }}
+                                    {% else %}
+                                        Non spécifiée
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ order.deliveryStatus == 'pending' ? 'warning' : (order.deliveryStatus == 'ongoing' ? 'info' : 'success') }}">
+                                        {{ deliveryStatuses[order.deliveryStatus] ?? order.deliveryStatus }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if order.deliveryGuy %}
+                                        {{ order.deliveryGuy.account.name }} {{ order.deliveryGuy.account.surname }}
+                                    {% else %}
+                                        <span class="text-muted">À affecter</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if order.deliveryStatus == 'pending' %}
+                                        <a href="{{ path('app_delivery_assign', {'id': order.id}) }}" 
+                                           class="btn btn-primary btn-sm">
+                                            Affecter
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">En cours</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    Aucune commande à livrer pour le moment.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,3 +7,8 @@ controllers:
 manual_test:
     path: /test-manuel
     controller: App\Controller\Admin\DashboardController::index
+
+app_orders_mark_delivered:
+    path: /orders/{id}/mark-delivered
+    controller: App\Controller\OrdersController::markAsDelivered
+    methods: POST

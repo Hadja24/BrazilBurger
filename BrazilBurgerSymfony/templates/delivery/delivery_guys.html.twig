@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livreurs - Brazil Burger{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Gestion des Livreurs</h1>
+
+    <!-- Filtre par statut -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Filtrer les performances des livreurs</h5>
+            <form method="get" action="{{ path('app_delivery_delivery_guys') }}" class="row g-3">
+                <div class="col-md-6">
+                    <label for="status" class="form-label">Afficher les livraisons avec le statut :</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">Tous les statuts</option>
+                        {% for key, label in deliveryStatuses %}
+                            <option value="{{ key }}" {{ status == key ? 'selected' : '' }}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 align-self-end">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                    <a href="{{ path('app_delivery_delivery_guys') }}" class="btn btn-secondary">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Liste des livreurs avec statistiques -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Statistiques des livreurs</h5>
+        </div>
+        <div class="card-body">
+            {% if deliveryGuys|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Livreur</th>
+                                <th>Contact</th>
+                                <th>Total Livraisons</th>
+                                <th>Livrées</th>
+                                <th>En cours</th>
+                                <th>En attente</th>
+                                <th>Note moyenne</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in deliveryGuys %}
+                            {% set deliveryGuy = item.deliveryGuy %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ deliveryGuy.account.name }} {{ deliveryGuy.account.surname }}</strong>
+                                    </td>
+                                    <td>
+                                        <small>{{ deliveryGuy.account.phone }}</small><br>
+                                        <small>{{ deliveryGuy.account.email }}</small>
+                                    </td>
+                                    <td>{{ item.totalDeliveries ?? 0 }}</td>
+                                    <td>
+                                        <span class="badge bg-success">{{ item.deliveredDeliveries ?? 0 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ item.ongoingDeliveries ?? 0 }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">{{ item.pendingDeliveries ?? 0 }}</span>
+                                    </td>
+                                    <td>
+                                        {% if item.averageRating > 0 %}
+                                            {% set rating = item.averageRating %}
+                                            {% for i in 1..5 %}
+                                                {% if i <= rating %}
+                                                    <i class="fas fa-star text-warning"></i>
+                                                {% elseif i <= rating + 0.5 %}
+                                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                                {% else %}
+                                                    <i class="far fa-star text-warning"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <br>
+                                            <small>({{ rating|number_format(1) }}/5)</small>
+                                        {% else %}
+                                            <span class="text-muted">Aucune note</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('app_delivery_delivery_guy_show', {'id': deliveryGuy.id}) }}" 
+                                           class="btn btn-info btn-sm">
+                                            <i class="fas fa-chart-line"></i> Détails
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    Aucun livreur trouvé.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

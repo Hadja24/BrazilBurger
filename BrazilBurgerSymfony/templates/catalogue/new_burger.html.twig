@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Burger - Brazil Burger{% endblock %}
+
+{% block nav_catalog %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <!-- Navigation retour -->
+    <div class="mb-4">
+        <a href="{{ path('app_catalogue') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour au catalogue
+        </a>
+    </div>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Nouveau Burger</h1>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" action="{{ path('app_catalogue_burger_new') }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Nom du Burger *</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label">Prix (XOF) *</label>
+                                <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="imageUrl" class="form-label">URL de l'image *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-link-45deg"></i>
+                                    </span>
+                                    <input type="url" class="form-control" id="imageUrl" name="imageUrl" 
+                                           placeholder="https://res.cloudinary.com/..." required>
+                                </div>
+                                <small class="text-muted">URL Cloudinary ou autre hébergeur d'images</small>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-plus-circle"></i> Ajouter le Burger
+                                </button>
+                                <a href="{{ path('app_catalogue') }}" class="btn btn-secondary">Annuler</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Aide</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-info-circle"></i> Informations importantes</h6>
+                        <ul class="mb-0">
+                            <li>Le prix doit être en Francs CFA (XOF)</li>
+                            <li>L'URL de l'image doit être complète</li>
+                            <li>Utilisez des URLs Cloudinary pour de meilleures performances</li>
+                            <li>Le burger sera automatiquement visible dans le catalogue</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <h6><i class="bi bi-exclamation-triangle"></i> Exemple d'URL Cloudinary</h6>
+                        <p class="small mb-0">https://res.cloudinary.com/votre-compte/image/upload/v123456789/burger.jpg</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -3,12 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\BurgerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
+#[ORM\Table(name: 'burger')]
 class Burger
 {
     #[ORM\Id]
@@ -20,24 +19,13 @@ class Burger
     private ?string $name = null;
 
     #[ORM\Column]
-    private ?int $price = null;
+    private ?float $price = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $image_url = null;
+    private ?string $imageUrl = null;
 
     #[ORM\Column]
     private ?bool $archived = null;
-
-    /**
-     * @var Collection<int, Menu>
-     */
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'burgers')]
-    private Collection $menus;
-
-    public function __construct()
-    {
-        $this->menus = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -56,12 +44,12 @@ class Burger
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(int $price): static
+    public function setPrice(float $price): static
     {
         $this->price = $price;
 
@@ -70,12 +58,12 @@ class Burger
 
     public function getImageUrl(): ?string
     {
-        return $this->image_url;
+        return $this->imageUrl;
     }
 
-    public function setImageUrl(string $image_url): static
+    public function setImageUrl(string $imageUrl): static
     {
-        $this->image_url = $image_url;
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }
@@ -88,33 +76,6 @@ class Burger
     public function setArchived(bool $archived): static
     {
         $this->archived = $archived;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Menu>
-     */
-    public function getMenus(): Collection
-    {
-        return $this->menus;
-    }
-
-    public function addMenu(Menu $menu): static
-    {
-        if (!$this->menus->contains($menu)) {
-            $this->menus->add($menu);
-            $menu->addBurger($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMenu(Menu $menu): static
-    {
-        if ($this->menus->removeElement($menu)) {
-            $menu->removeBurger($this);
-        }
 
         return $this;
     }

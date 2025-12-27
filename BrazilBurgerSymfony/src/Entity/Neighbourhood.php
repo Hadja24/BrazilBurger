@@ -11,14 +11,14 @@ class Neighbourhood
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: "id")]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: "nom", length: 255)]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'neighbourhoods')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: "zone_id", nullable: false)]
     private ?Zone $zone = null;
 
     public function getId(): ?int

@@ -59,7 +59,7 @@ class Menu
 
     public function getPrice(): ?float
     {
-        return $this->price;
+        return $this->getCalculatedPrice();
     }
 
     public function setPrice(float $price): static
@@ -116,4 +116,14 @@ class Menu
 
         return $this;
     }
+
+    public function getCalculatedPrice(): float
+    {
+        $total = 0;
+        foreach ($this->burgers as $burger) {
+            $total += $burger->getPrice();
+        }
+        return $total;
+    }
+
 }

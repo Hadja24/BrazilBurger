@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Assigner un livreur - Brazil Burger{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Assigner un livreur à la commande #{{ order.id }}</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Informations de la commande -->
+                    <div class="mb-4">
+                        <h6>Détails de la commande :</h6>
+                        <ul>
+                            <li><strong>Client :</strong> {{ order.customer.account.name }} {{ order.customer.account.surname }}</li>
+                            <li><strong>Téléphone :</strong> {{ order.customer.account.phone }}</li>
+                            <li><strong>Date :</strong> {{ order.orderDate|date('d/m/Y H:i') }}</li>
+                            <li><strong>Total :</strong> {{ order.totalPrice }} €</li>
+                            <li><strong>Zone :</strong> {{ order.zone.name }}</li>
+                            <li><strong>Adresse :</strong> {{ order.customer.account.adresse ?? 'Non spécifiée' }}</li>
+                        </ul>
+                    </div>
+
+                    <!-- Formulaire d'assignation -->
+                    {{ form_start(form) }}
+                    <div class="mb-3">
+                        {{ form_label(form.deliveryGuy) }}
+                        {{ form_widget(form.deliveryGuy, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.deliveryGuy) }}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('app_delivery_index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Assigner le livreur
+                        </button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

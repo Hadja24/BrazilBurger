@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Orders;
+use App\Entity\Customer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -134,5 +135,195 @@ class OrdersRepository extends ServiceEntityRepository
             ],
             'orderState' => 'FINISHED'
         ]);
+    }
+
+    public function findByDeliveryGuyAndStatus($deliveryGuy, $deliveryStatus = null)
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->andWhere('o.deliveryGuy = :deliveryGuy')
+            ->setParameter('deliveryGuy', $deliveryGuy);
+
+        if ($deliveryStatus) {
+            $qb->andWhere('o.deliveryStatus = :deliveryStatus')
+                ->setParameter('deliveryStatus', $deliveryStatus);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    // Ajouter cette méthode dans src/Repository/OrdersRepository.php
+    public function findByCustomer(Customer $customer): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.customer = :customer')
+            ->setParameter('customer', $customer)
+            ->orderBy('o.orderDate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findOrdersToDeliverByZone(?int $zoneId = null): array
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->andWhere('o.receptionType = :delivery')
+            ->setParameter('delivery', Orders::RECEPTION_DELIVERY)
+            ->orderBy('o.orderDate', 'ASC');
+
+        if ($zoneId) {
+            $qb->andWhere('o.zone = :zone')
+                ->setParameter('zone', $zoneId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    // Dans OrdersRepository.php
+    public function findDeliveryOrdersWithFilters(?int $zoneId = null, ?string $deliveryStatus = null): array
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->leftJoin('o.customer', 'c')
+            ->leftJoin('c.account', 'a')
+            ->leftJoin('o.zone', 'z')
+            ->leftJoin('o.deliveryGuy', 'dg')
+            ->leftJoin('dg.account', 'dga')
+            ->where('o.receptionType = :delivery')
+            ->setParameter('delivery', Orders::RECEPTION_DELIVERY);
+
+        if ($zoneId) {
+            $qb->andWhere('o.zone = :zone')
+                ->setParameter('zone', $zoneId);
+        }
+
+        if ($deliveryStatus) {
+            $qb->andWhere('o.deliveryStatus = :status')
+                ->setParameter('status', $deliveryStatus);
+        }
+
+        return $qb->addOrderBy('o.orderDate', 'ASC')->getQuery()->getResult();
+    }
+    // Ajouter ces méthodes dans src/Repository/OrdersRepository.php
+
+    public function findDeliveryOrders(?int $zoneId = null, ?string $deliveryStatus = null): array
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->andWhere('o.receptionType = :delivery')
+            ->setParameter('delivery', Orders::RECEPTION_DELIVERY)
+            ->orderBy('o.orderDate', 'DESC');
+
+        if ($zoneId) {
+            $qb->andWhere('o.zone = :zone')
+                ->setParameter('zone', $zoneId);
+        }
+
+        if ($deliveryStatus) {
+            // Version tolérante : cherche les variations possibles
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->eq('o.deliveryStatus', ':status'),
+                $qb->expr()->eq('LOWER(o.deliveryStatus)', 'LOWER(:status)'),
+                $qb->expr()->like('LOWER(o.deliveryStatus)', $qb->expr()->literal('%' . strtolower($deliveryStatus) . '%'))
+            ))
+            ->setParameter('status', $deliveryStatus);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findDeliveryOrdersWithCustomers(?int $zoneId = null): array
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->leftJoin('o.customer', 'c')
+            ->leftJoin('c.account', 'a')
+            ->addSelect('c', 'a') // Important : inclure dans le SELECT
+            ->where('o.receptionType = :delivery')
+            ->setParameter('delivery', Orders::RECEPTION_DELIVERY);
+
+        if ($zoneId) {
+            $qb->andWhere('o.zone = :zone')
+                ->setParameter('zone', $zoneId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getDeliveryGuyStats(int $deliveryGuyId, ?string $status = null): array
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->select([
+                'COUNT(o.id) as total_deliveries',
+                'SUM(CASE WHEN o.deliveryStatus = :delivered THEN 1 ELSE 0 END) as delivered',
+                'SUM(CASE WHEN o.deliveryStatus = :ongoing THEN 1 ELSE 0 END) as ongoing',
+                'SUM(CASE WHEN o.deliveryStatus = :pending THEN 1 ELSE 0 END) as pending',
+                'AVG(o.deliveryRating) as avg_rating'
+            ])
+            ->andWhere('o.deliveryGuy = :deliveryGuy')
+            ->andWhere('o.receptionType = :delivery')
+            ->setParameter('deliveryGuy', $deliveryGuyId)
+            ->setParameter('delivery', Orders::RECEPTION_DELIVERY)
+            ->setParameter('delivered', Orders::DELIVERY_STATUS_DELIVERED)
+            ->setParameter('ongoing', Orders::DELIVERY_STATUS_ONGOING)
+            ->setParameter('pending', Orders::DELIVERY_STATUS_PENDING);
+
+        if ($status) {
+            $qb->andWhere('o.deliveryStatus = :status')
+            ->setParameter('status', $status);
+        }
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function getDeliveryGuyDetailedStats(int $deliveryGuyId): array
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->select([
+                'COUNT(o.id) as total_deliveries',
+                'SUM(CASE WHEN o.deliveryStatus = :delivered THEN 1 ELSE 0 END) as delivered',
+                'SUM(CASE WHEN o.deliveryStatus = :ongoing THEN 1 ELSE 0 END) as ongoing',
+                'SUM(CASE WHEN o.deliveryStatus = :pending THEN 1 ELSE 0 END) as pending',
+                'SUM(CASE WHEN o.deliveryStatus = :cancelled THEN 1 ELSE 0 END) as cancelled',
+                'AVG(o.deliveryRating) as avg_rating',
+                'MIN(o.deliveryRating) as min_rating',
+                'MAX(o.deliveryRating) as max_rating',
+                'SUM(o.totalPrice) as total_revenue'
+            ])
+            ->andWhere('o.deliveryGuy = :deliveryGuy')
+            ->andWhere('o.receptionType = :delivery')
+            ->setParameter('deliveryGuy', $deliveryGuyId)
+            ->setParameter('delivery', Orders::RECEPTION_DELIVERY)
+            ->setParameter('delivered', Orders::DELIVERY_STATUS_DELIVERED)
+            ->setParameter('ongoing', Orders::DELIVERY_STATUS_ONGOING)
+            ->setParameter('pending', Orders::DELIVERY_STATUS_PENDING)
+            ->setParameter('cancelled', Orders::DELIVERY_STATUS_CANCELLED);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function findRecentDeliveriesByDeliveryGuy(int $deliveryGuyId, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.deliveryGuy = :deliveryGuy')
+            ->andWhere('o.receptionType = :delivery')
+            ->setParameter('deliveryGuy', $deliveryGuyId)
+            ->setParameter('delivery', Orders::RECEPTION_DELIVERY)
+            ->orderBy('o.orderDate', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findDeliveriesByDeliveryGuyAndStatus(int $deliveryGuyId, ?string $status = null): array
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->andWhere('o.deliveryGuy = :deliveryGuy')
+            ->andWhere('o.receptionType = :delivery')
+            ->setParameter('deliveryGuy', $deliveryGuyId)
+            ->setParameter('delivery', Orders::RECEPTION_DELIVERY)
+            ->orderBy('o.orderDate', 'DESC');
+
+        if ($status) {
+            $qb->andWhere('o.deliveryStatus = :status')
+               ->setParameter('status', $status);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Burger - {{ burger.name }}{% endblock %}
+
+{% block nav_catalog %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <!-- Navigation retour -->
+    <div class="mb-4">
+        <a href="{{ path('app_catalogue') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour au catalogue
+        </a>
+    </div>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Modifier le Burger</h1>
+        {% if burger.archived %}
+            <span class="badge bg-warning">Archivé</span>
+        {% endif %}
+    </div>
+
+    <!-- Formulaire -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" action="{{ path('app_catalogue_burger_edit', {'id': burger.id}) }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Nom du Burger *</label>
+                                <input type="text" class="form-control" id="name" name="name" 
+                                       value="{{ burger.name }}" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label">Prix (XOF) *</label>
+                                <input type="number" step="0.01" class="form-control" id="price" name="price" 
+                                       value="{{ burger.price }}" required>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="imageUrl" class="form-label">URL de l'image *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-link-45deg"></i>
+                                    </span>
+                                    <input type="url" class="form-control" id="imageUrl" name="imageUrl" 
+                                           value="{{ burger.imageUrl }}" required>
+                                </div>
+                                <small class="text-muted">URL Cloudinary ou autre hébergeur d'images</small>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-save"></i> Sauvegarder
+                                </button>
+                                <a href="{{ path('app_catalogue') }}" class="btn btn-secondary">Annuler</a>
+                                
+                                {% if not burger.archived %}
+                                    <form method="post" 
+                                          action="{{ path('app_catalogue_burger_archive', {'id': burger.id}) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Archiver ce burger ? Il ne sera plus visible dans le catalogue.');">
+                                        <button type="submit" class="btn btn-outline-warning">
+                                            <i class="bi bi-archive"></i> Archiver
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Aperçu -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Aperçu</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ burger.imageUrl }}" 
+                         alt="{{ burger.name }}" 
+                         class="img-fluid rounded mb-3" 
+                         style="max-height: 200px; object-fit: cover;"
+                         id="imagePreview">
+                    <h5 id="namePreview">{{ burger.name }}</h5>
+                    <p class="text-danger fw-bold fs-5" id="pricePreview">{{ burger.price|format_currency('XOF') }}</p>
+                </div>
+            </div>
+            
+            <!-- Prévisualisation en temps réel -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-eye"></i> Prévisualisation</h5>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted">Les changements s'afficheront ici en temps réel.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Prévisualisation en temps réel
+document.addEventListener('DOMContentLoaded', function() {
+    const nameInput = document.getElementById('name');
+    const priceInput = document.getElementById('price');
+    const imageUrlInput = document.getElementById('imageUrl');
+    
+    const namePreview = document.getElementById('namePreview');
+    const pricePreview = document.getElementById('pricePreview');
+    const imagePreview = document.getElementById('imagePreview');
+    
+    nameInput.addEventListener('input', function() {
+        namePreview.textContent = this.value || '{{ burger.name }}';
+    });
+    
+    priceInput.addEventListener('input', function() {
+        const price = parseFloat(this.value) || {{ burger.price }};
+        pricePreview.textContent = new Intl.NumberFormat('fr-FR', {
+            style: 'currency',
+            currency: 'XOF'
+        }).format(price);
+    });
+    
+    imageUrlInput.addEventListener('input', function() {
+        imagePreview.src = this.value || '{{ burger.imageUrl }}';
+    });
+});
+</script>
+{% endblock %}
