@@ -1,0 +1,268 @@
+/* Responsive Utilities */
+:root {
+    --mobile-padding: 15px;
+    --tablet-padding: 20px;
+    --desktop-padding: 25px;
+}
+
+/* Container responsive */
+.responsive-container {
+    width: 100%;
+    padding-right: var(--mobile-padding);
+    padding-left: var(--mobile-padding);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 576px) {
+    .responsive-container {
+        max-width: 540px;
+        padding-right: var(--tablet-padding);
+        padding-left: var(--tablet-padding);
+    }
+}
+
+@media (min-width: 768px) {
+    .responsive-container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .responsive-container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .responsive-container {
+        max-width: 1140px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .responsive-container {
+        max-width: 1320px;
+    }
+}
+
+/* Grid responsive */
+.responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+}
+
+@media (min-width: 576px) {
+    .responsive-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .responsive-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 992px) {
+    .responsive-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Card responsive */
+.responsive-card {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 576px) {
+    .responsive-card {
+        width: calc(50% - 10px);
+    }
+}
+
+@media (min-width: 768px) {
+    .responsive-card {
+        width: calc(33.333% - 14px);
+    }
+}
+
+@media (min-width: 992px) {
+    .responsive-card {
+        width: calc(25% - 15px);
+    }
+}
+
+/* Table responsive */
+.responsive-table {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.responsive-table table {
+    min-width: 600px;
+}
+
+@media (min-width: 768px) {
+    .responsive-table table {
+        min-width: 100%;
+    }
+}
+
+/* Form responsive */
+.responsive-form .form-group {
+    margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .responsive-form .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -10px;
+        margin-left: -10px;
+    }
+    
+    .responsive-form .form-col {
+        flex: 1 0 0%;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+}
+
+/* Image responsive */
+.responsive-img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Navigation responsive */
+.responsive-nav {
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .responsive-nav {
+        flex-direction: row;
+    }
+}
+
+/* Utility classes */
+.hidden-mobile {
+    display: none !important;
+}
+
+.hidden-desktop {
+    display: block !important;
+}
+
+@media (min-width: 768px) {
+    .hidden-mobile {
+        display: block !important;
+    }
+    
+    .hidden-desktop {
+        display: none !important;
+    }
+}
+
+/* Spacing responsive */
+.responsive-spacing {
+    padding: 15px;
+}
+
+@media (min-width: 768px) {
+    .responsive-spacing {
+        padding: 25px;
+    }
+}
+
+@media (min-width: 992px) {
+    .responsive-spacing {
+        padding: 30px;
+    }
+}
+
+/* Font sizes responsive */
+.responsive-text {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .responsive-text {
+        font-size: 16px;
+    }
+}
+
+/* Button responsive */
+.responsive-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .responsive-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+}
+
+/* Dashboard specific */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Product grid specific */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+}
+
+@media (min-width: 576px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 992px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Modal responsive */
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 10px;
+        width: calc(100% - 20px);
+    }
+}

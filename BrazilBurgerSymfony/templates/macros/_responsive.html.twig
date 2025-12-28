@@ -1,0 +1,41 @@
+{# templates/macros/_responsive.html.twig #}
+
+{% macro container(fluid = false) %}
+    {% if fluid %}
+        <div class="container-fluid responsive-container">
+    {% else %}
+        <div class="container responsive-container">
+    {% endif %}
+        {{ caller() }}
+    </div>
+{% endmacro %}
+
+{% macro row() %}
+    <div class="row">
+        {{ caller() }}
+    </div>
+{% endmacro %}
+
+{% macro col(sizes = '12') %}
+    <div class="col-{{ sizes }}">
+        {{ caller() }}
+    </div>
+{% endmacro %}
+
+{% macro responsiveCol(mobile = 12, tablet = 12, desktop = 12, large = 12) %}
+    <div class="col-{{ mobile }} col-sm-{{ tablet }} col-md-{{ desktop }} col-lg-{{ large }}">
+        {{ caller() }}
+    </div>
+{% endmacro %}
+
+{% macro hiddenOn(breakpoint) %}
+    {% if breakpoint == 'mobile' %}
+        <div class="hidden-mobile">
+            {{ caller() }}
+        </div>
+    {% elseif breakpoint == 'desktop' %}
+        <div class="hidden-desktop">
+            {{ caller() }}
+        </div>
+    {% endif %}
+{% endmacro %}

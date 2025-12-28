@@ -210,7 +210,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="fw-bold text-success">{{ order.totalPrice }} €</td>
+                                    <td class="fw-bold text-success">{{ order.totalPrice|format_currency('XOF') }}</td>
                                     <td>
                                         <div class="fw-bold">{{ order.orderDate|date('d/m/Y') }}</div>
                                         <small class="text-muted">{{ order.orderDate|date('H:i') }}</small>

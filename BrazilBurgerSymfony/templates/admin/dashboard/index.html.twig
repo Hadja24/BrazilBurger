@@ -195,10 +195,10 @@
                                         <small class="text-muted">{{ order.orderDate|date('H:i') }}</small>
                                     </td>
                                     <td class="text-end">
-                                        <a href="{{ path('app_orders_show', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                                            <i class="bi bi-eye me-1"></i> Détails
-                                        </a>
-                                    </td>
+                                    <a href="{{ path('app_orders_show', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                        <i class="bi bi-eye me-1"></i> Détails
+                                    </a>
+                                </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

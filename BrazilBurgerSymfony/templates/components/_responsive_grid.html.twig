@@ -1,0 +1,85 @@
+{# templates/components/_responsive_grid.html.twig #}
+
+{% macro productGrid(products, columns_mobile = 1, columns_tablet = 2, columns_desktop = 3, columns_large = 4) %}
+    <style>
+        .product-grid-{{ loop.index }} {
+            --mobile-columns: {{ columns_mobile }};
+            --tablet-columns: {{ columns_tablet }};
+            --desktop-columns: {{ columns_desktop }};
+            --large-columns: {{ columns_large }};
+        }
+        
+        .product-grid-{{ loop.index }} {
+            display: grid;
+            grid-template-columns: repeat(var(--mobile-columns), 1fr);
+            gap: 15px;
+        }
+        
+        @media (min-width: 576px) {
+            .product-grid-{{ loop.index }} {
+                grid-template-columns: repeat(var(--tablet-columns), 1fr);
+                gap: 20px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .product-grid-{{ loop.index }} {
+                grid-template-columns: repeat(var(--desktop-columns), 1fr);
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .product-grid-{{ loop.index }} {
+                grid-template-columns: repeat(var(--large-columns), 1fr);
+            }
+        }
+    </style>
+    
+    <div class="product-grid product-grid-{{ loop.index }}">
+        {{ products|raw }}
+    </div>
+{% endmacro %}
+
+{% macro responsiveCard(image, title, content, actions, size = 'medium') %}
+    <div class="responsive-card card-size-{{ size }}">
+        {% if image %}
+            <div class="card-image">
+                <img src="{{ image }}" alt="{{ title }}" class="responsive-img">
+            </div>
+        {% endif %}
+        
+        <div class="card-content responsive-spacing">
+            <h3 class="card-title responsive-text">{{ title }}</h3>
+            <div class="card-body">{{ content|raw }}</div>
+            
+            {% if actions %}
+                <div class="card-actions">
+                    {{ actions|raw }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro responsiveTable(headers, rows, id = '') %}
+    <div class="responsive-table" {% if id %}id="{{ id }}"{% endif %}>
+        <table class="table">
+            <thead>
+                <tr>
+                    {% for header in headers %}
+                        <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endmacro %}
