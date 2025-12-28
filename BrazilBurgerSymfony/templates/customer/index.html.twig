@@ -7,63 +7,124 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        :root {
-            --brazil-green: #009739;
-            --brazil-yellow: #FEDD00;
-            --brazil-blue: #012169;
-            --brazil-white: #FFFFFF;
-            --brazil-gray: #F5F5F5;
-            --brazil-dark: #333333;
+        .customer-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: calc(100vh - 150px);
         }
         
-        .brazil-header {
-            background: linear-gradient(90deg, var(--brazil-green) 0%, var(--brazil-yellow) 50%, var(--brazil-blue) 100%);
+        .customer-header {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.95), rgba(52, 73, 94, 0.95));
             color: white;
-            padding: 20px 0;
+            padding: 30px 0;
             margin-bottom: 30px;
-            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .customer-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e63946' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        
+        .customer-header .badge {
+            background: linear-gradient(135deg, #e63946, #d32f2f);
+            color: white;
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
         }
         
         .customer-card {
-            background: var(--brazil-white);
-            border-radius: 12px;
+            background: white;
+            border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            border: 1px solid rgba(0,0,0,0.05);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .customer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #e63946, #f39c12);
+            opacity: 0;
+            transition: all 0.3s ease;
         }
         
         .customer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-            border-color: var(--brazil-green);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+            border-color: rgba(231, 57, 70, 0.2);
+        }
+        
+        .customer-card:hover::before {
+            opacity: 1;
         }
         
         .customer-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--brazil-blue), var(--brazil-green));
+            background: linear-gradient(135deg, #e63946, #d32f2f);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 20px rgba(230, 57, 70, 0.25);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .customer-card:hover .customer-avatar {
+            transform: scale(1.1);
+            box-shadow: 0 12px 25px rgba(230, 57, 70, 0.35);
         }
         
         .customer-info h4 {
-            color: var(--brazil-dark);
+            color: #2c3e50;
             margin-bottom: 10px;
             font-weight: 700;
+            text-align: center;
+        }
+        
+        .customer-info .contact-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .contact-details p {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
         
         .customer-stats {
-            background: var(--brazil-gray);
-            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.05), rgba(52, 73, 94, 0.05));
+            border-radius: 10px;
             padding: 15px;
             margin-top: 15px;
+            border: 1px solid rgba(0,0,0,0.05);
         }
         
         .stat-item {
@@ -74,84 +135,122 @@
         .stat-number {
             font-size: 24px;
             font-weight: 700;
-            color: var(--brazil-green);
+            color: #e63946;
             display: block;
+            line-height: 1;
         }
         
         .stat-label {
             font-size: 12px;
-            color: #666;
+            color: #636e72;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 600;
         }
         
         .btn-customer-dashboard {
-            background: linear-gradient(135deg, var(--brazil-blue), #1A3A8F);
+            background: linear-gradient(135deg, #2c3e50, #34495e);
             color: white;
-            border-radius: 25px;
-            padding: 8px 20px;
+            border-radius: 50px;
+            padding: 10px 25px;
             border: none;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-customer-dashboard:hover {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(44, 62, 80, 0.25);
+            color: white;
+        }
+        
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .search-title {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .search-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #e63946, #f39c12);
+            border-radius: 4px;
+        }
+        
+        .form-control-search {
+            border-radius: 10px;
+            padding: 12px 20px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .form-control-search:focus {
+            border-color: #e63946;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15);
+        }
+        
+        .btn-search {
+            background: linear-gradient(135deg, #e63946, #d32f2f);
+            color: white;
+            border-radius: 10px;
+            padding: 12px 30px;
+            border: none;
+            font-weight: 600;
             transition: all 0.3s ease;
             width: 100%;
         }
         
-        .btn-customer-dashboard:hover {
-            background: linear-gradient(135deg, #1A3A8F, var(--brazil-blue));
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(26, 58, 143, 0.3);
-        }
-        
-        .search-section {
-            background: var(--brazil-white);
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        
-        .search-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            color: var(--brazil-dark);
-            margin-bottom: 20px;
-        }
-        
-        .form-control-search {
-            border-radius: 25px;
-            padding: 12px 20px;
-            border: 2px solid #ddd;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control-search:focus {
-            border-color: var(--brazil-green);
-            box-shadow: 0 0 0 0.2rem rgba(0, 151, 57, 0.25);
-        }
-        
-        .btn-search {
-            background: linear-gradient(135deg, var(--brazil-green), #00802C);
-            color: white;
-            border-radius: 25px;
-            padding: 12px 30px;
-            border: none;
-            font-weight: 600;
-        }
-        
         .btn-search:hover {
-            background: linear-gradient(135deg, #00802C, var(--brazil-green));
+            background: linear-gradient(135deg, #d32f2f, #e63946);
             transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(230, 57, 70, 0.25);
         }
         
         .no-customers {
             text-align: center;
-            padding: 50px;
-            color: #666;
+            padding: 60px 20px;
+            color: #636e72;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
         
         .no-customers i {
-            font-size: 64px;
+            font-size: 80px;
             margin-bottom: 20px;
-            color: #ddd;
+            color: #e9ecef;
+            opacity: 0.5;
+        }
+        
+        .customer-count-badge {
+            background: linear-gradient(135deg, #e63946, #d32f2f);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 10px;
+            box-shadow: 0 3px 10px rgba(230, 57, 70, 0.2);
         }
         
         @media (max-width: 768px) {
@@ -162,123 +261,158 @@
             .customer-avatar {
                 width: 60px;
                 height: 60px;
-                font-size: 24px;
+                font-size: 22px;
+            }
+            
+            .search-section {
+                padding: 20px;
             }
         }
     </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <!-- Header avec navigation -->
-    <div class="brazil-header text-center">
-        <h1 class="display-4 mb-0">
-            <i class="fas fa-users me-2"></i>
-            GESTION DES CLIENTS
-        </h1>
-        <p class="lead mb-0">Gérez et suivez vos clients Brazil Burger</p>
-    </div>
-    
-    <!-- Section de recherche rapide -->
-    <div class="search-section">
-        <h3 class="search-title">
-            <i class="fas fa-search me-2"></i>
-            Recherche rapide de client
-        </h3>
-        <form action="{{ path('app_customers_search') }}" method="GET" class="row g-3">
-            <div class="col-md-4">
-                <input type="text" name="name" class="form-control form-control-search" 
-                       placeholder="Prénom du client" value="{{ app.request.query.get('name') }}">
+<div class="customer-section">
+    <div class="container-fluid py-4">
+        <!-- Header avec navigation -->
+        <div class="customer-header text-center">
+            <div class="container">
+                <h1 class="display-5 mb-3 fw-bold">
+                    <i class="fas fa-users me-3"></i>
+                    Gestion des Clients
+                </h1>
+                <p class="lead mb-3 opacity-75">Gérez et suivez vos clients Brazil Burger</p>
+                <span class="badge">
+                    <i class="fas fa-user-friends me-1"></i>
+                    {{ customers|length }} clients
+                </span>
             </div>
-            <div class="col-md-4">
-                <input type="text" name="surname" class="form-control form-control-search" 
-                       placeholder="Nom du client" value="{{ app.request.query.get('surname') }}">
-            </div>
-            <div class="col-md-4">
-                <input type="text" name="phone" class="form-control form-control-search" 
-                       placeholder="Téléphone" value="{{ app.request.query.get('phone') }}">
-            </div>
-            <div class="col-12 text-center mt-3">
-                <button type="submit" class="btn btn-search">
-                    <i class="fas fa-search me-2"></i>
-                    Rechercher le client
-                </button>
-            </div>
-        </form>
-    </div>
-    
-    <!-- Liste des clients -->
-    <h2 class="mb-4" style="color: var(--brazil-dark); font-weight: 700;">
-        <i class="fas fa-list me-2"></i>
-        Tous les clients ({{ customers|length }})
-    </h2>
-    
-    {% if customers|length > 0 %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {% for customer in customers %}
-                <div class="col">
-                    <div class="customer-card">
-                        <div class="customer-avatar">
-                            {{ customer.name|first|upper }}{{ customer.surname|first|upper }}
-                        </div>
-                        
-                        <div class="customer-info text-center">
-                            <h4>{{ customer.name }} {{ customer.surname }}</h4>
-                            <p class="text-muted mb-2">
-                                <i class="fas fa-phone me-2"></i>
-                                {{ customer.phone }}
-                            </p>
-                            <p class="text-muted mb-3">
-                                <i class="fas fa-envelope me-2"></i>
-                                {{ customer.email }}
-                            </p>
+        </div>
+        
+        <!-- Section de recherche rapide -->
+        <div class="search-section">
+            <h3 class="search-title">
+                <i class="fas fa-search me-2"></i>
+                Recherche rapide
+            </h3>
+            <form action="{{ path('app_customers_search') }}" method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-user text-muted"></i>
+                        </span>
+                        <input type="text" name="name" class="form-control form-control-search border-start-0" 
+                               placeholder="Prénom du client" value="{{ app.request.query.get('name') }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-user-tag text-muted"></i>
+                        </span>
+                        <input type="text" name="surname" class="form-control form-control-search border-start-0" 
+                               placeholder="Nom du client" value="{{ app.request.query.get('surname') }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-phone text-muted"></i>
+                        </span>
+                        <input type="text" name="phone" class="form-control form-control-search border-start-0" 
+                               placeholder="Téléphone" value="{{ app.request.query.get('phone') }}">
+                    </div>
+                </div>
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-search">
+                        <i class="fas fa-search me-2"></i>
+                        Rechercher
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Liste des clients -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0" style="color: #2c3e50; font-weight: 700;">
+                <i class="fas fa-list me-2"></i>
+                Tous les clients
+            </h2>
+            <span class="customer-count-badge">
+                {{ customers|length }} {{ customers|length > 1 ? 'clients' : 'client' }}
+            </span>
+        </div>
+        
+        {% if customers|length > 0 %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                {% for customer in customers %}
+                    <div class="col">
+                        <div class="customer-card">
+                            <div class="customer-avatar">
+                                {{ customer.name|first|upper }}{{ customer.surname|first|upper }}
+                            </div>
                             
-                            <div class="customer-stats">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="stat-item">
-                                            <span class="stat-number">{{ customer.orders|length }}</span>
-                                            <span class="stat-label">Commandes</span>
+                            <div class="customer-info">
+                                <h4>{{ customer.name }} {{ customer.surname }}</h4>
+                                
+                                <div class="contact-details">
+                                    <p class="mb-2">
+                                        <i class="fas fa-phone me-2 text-primary"></i>
+                                        <strong>{{ customer.phone }}</strong>
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-envelope me-2 text-primary"></i>
+                                        <small>{{ customer.email }}</small>
+                                    </p>
+                                </div>
+                                
+                                <div class="customer-stats">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="stat-item">
+                                                <span class="stat-number">{{ customer.orders|length }}</span>
+                                                <span class="stat-label">Commandes</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="stat-item">
-                                            <span class="stat-number">
-                                                {% set totalSpent = 0 %}
-                                                {% for order in customer.orders %}
-                                                    {% set totalSpent = totalSpent + order.totalPrice %}
-                                                {% endfor %}
-                                                {{ totalSpent|number_format(0, ',', ' ') }} FCFA
-                                            </span>
-                                            <span class="stat-label">Dépensé</span>
+                                        <div class="col-6">
+                                            <div class="stat-item">
+                                                <span class="stat-number">
+                                                    {% set totalSpent = 0 %}
+                                                    {% for order in customer.orders %}
+                                                        {% set totalSpent = totalSpent + order.totalPrice %}
+                                                    {% endfor %}
+                                                    {{ totalSpent|number_format(0, ',', ' ') }}
+                                                </span>
+                                                <span class="stat-label">FCFA</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <div class="mt-4">
-                                <a href="{{ path('app_customers_show', {'id': customer.id}) }}" 
-                                   class="btn btn-customer-dashboard">
-                                    <i class="fas fa-chart-line me-2"></i>
-                                    Voir le dashboard
-                                </a>
+                                
+                                <div class="mt-4">
+                                    <a href="{{ path('app_customers_show', {'id': customer.id}) }}" 
+                                       class="btn btn-customer-dashboard">
+                                        <i class="fas fa-chart-line me-2"></i>
+                                        Voir le dashboard
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="no-customers">
-            <i class="fas fa-users-slash"></i>
-            <h3 class="mb-3">Aucun client trouvé</h3>
-            <p class="text-muted mb-4">Commencez par inscrire vos premiers clients !</p>
-            <a href="#" class="btn btn-primary">
-                <i class="fas fa-user-plus me-2"></i>
-                Ajouter un client
-            </a>
-        </div>
-    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-customers">
+                <i class="fas fa-users-slash"></i>
+                <h3 class="mb-3 fw-bold">Aucun client trouvé</h3>
+                <p class="text-muted mb-4">Commencez par inscrire vos premiers clients !</p>
+                <a href="#" class="btn btn-primary px-4">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Ajouter un client
+                </a>
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
 
@@ -288,7 +422,7 @@
         // Animation des cartes clients
         document.querySelectorAll('.customer-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
+                this.style.transform = 'translateY(-8px)';
             });
             
             card.addEventListener('mouseleave', function() {
@@ -297,7 +431,21 @@
         });
         
         // Focus sur le premier champ de recherche
-        document.querySelector('.form-control-search').focus();
+        const searchInput = document.querySelector('.form-control-search');
+        if (searchInput) {
+            searchInput.focus();
+        }
+        
+        // Animation des avatars au survol
+        document.querySelectorAll('.customer-avatar').forEach(avatar => {
+            avatar.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            avatar.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
         
         // Confirmation avant suppression (si ajouté plus tard)
         document.querySelectorAll('.btn-danger').forEach(button => {
@@ -305,6 +453,21 @@
                 if (!confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
                     e.preventDefault();
                 }
+            });
+        });
+        
+        // Animation d'apparition progressive des cartes
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.customer-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
             });
         });
     </script>

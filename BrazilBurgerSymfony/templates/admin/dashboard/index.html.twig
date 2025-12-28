@@ -4,67 +4,95 @@
 
 {% block nav_dashboard %}active{% endblock %}
 
+{% block page_title %}Tableau de Bord{% endblock %}
+{% block page_subtitle %}Aperçu complet de votre activité{% endblock %}
+
 {% block body %}
-<div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card">
+<div class="container-fluid px-0">
+    <!-- Statistiques Principales -->
+    <div class="row mb-4 g-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card revenue-card">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="bi bi-cash-coin fs-1 text-success"></i>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="card-title text-muted">Total Revenue</h5>
-                            <h3 class="mb-0">{{ totalRevenue|default(0)|number_format(0, ',', ' ') }} F CFA</h3>
+                            <h6 class="card-subtitle mb-2 text-uppercase">Revenu Total</h6>
+                            <h2 class="card-title mb-0">{{ totalRevenue|default(0)|number_format(0, ',', ' ') }} <small class="fs-6 text-muted">F CFA</small></h2>
+                            <div class="mt-3">
+                                <span class="badge bg-success bg-opacity-10 text-success">
+                                    <i class="bi bi-arrow-up me-1"></i> 12.5%
+                                </span>
+                                <span class="text-muted ms-2">vs mois dernier</span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-cash-coin"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-3">
-            <div class="card">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card orders-card">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="bi bi-receipt fs-1 text-primary"></i>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="card-title text-muted">Total Orders</h5>
-                            <h3 class="mb-0">{{ totalOrders|default(0) }}</h3>
+                            <h6 class="card-subtitle mb-2 text-uppercase">Commandes Total</h6>
+                            <h2 class="card-title mb-0">{{ totalOrders|default(0) }}</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-primary bg-opacity-10 text-primary">
+                                    <i class="bi bi-arrow-up me-1"></i> 8.2%
+                                </span>
+                                <span class="text-muted ms-2">vs mois dernier</span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-receipt"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-3">
-            <div class="card">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card customers-card">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="bi bi-people fs-1 text-warning"></i>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="card-title text-muted">Total Customers</h5>
-                            <h3 class="mb-0">{{ totalCustomers|default(0) }}</h3>
+                            <h6 class="card-subtitle mb-2 text-uppercase">Clients</h6>
+                            <h2 class="card-title mb-0">{{ totalCustomers|default(0) }}</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-warning bg-opacity-10 text-warning">
+                                    <i class="bi bi-arrow-up me-1"></i> 5.7%
+                                </span>
+                                <span class="text-muted ms-2">nouveaux clients</span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-people"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-3">
-            <div class="card">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card pending-card">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <i class="bi bi-clock-history fs-1 text-danger"></i>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="card-title text-muted">Pending Orders</h5>
-                            <h3 class="mb-0">{{ pendingOrders|default(0) }}</h3>
+                            <h6 class="card-subtitle mb-2 text-uppercase">En Attente</h6>
+                            <h2 class="card-title mb-0">{{ pendingOrders|default(0) }}</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-danger bg-opacity-10 text-danger">
+                                    <i class="bi bi-clock me-1"></i> En attente
+                                </span>
+                                <span class="text-muted ms-2">à traiter</span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-clock-history"></i>
                         </div>
                     </div>
                 </div>
@@ -72,110 +100,311 @@
         </div>
     </div>
     
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Recent Orders</h5>
+    <!-- Deuxième ligne : Graphiques et Statistiques -->
+    <div class="row mb-4 g-4">
+        <!-- Commandes Récentes -->
+        <div class="col-xl-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pb-0 pt-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title mb-1">Commandes Récentes</h5>
+                            <p class="text-muted mb-0">Les dernières commandes passées</p>
+                        </div>
+                        <a href="{{ path('app_orders_index') }}" class="btn btn-sm btn-outline-primary">
+                            Voir tout <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body pt-2">
                     {% if recentOrders|length > 0 %}
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover align-middle">
                             <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
+                                <tr class="border-light">
+                                    <th class="border-0">N° Commande</th>
+                                    <th class="border-0">Client</th>
+                                    <th class="border-0">Montant</th>
+                                    <th class="border-0">Statut</th>
+                                    <th class="border-0">Date</th>
+                                    <th class="border-0 text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for order in recentOrders %}
-                                <tr>
-                                    <td>#{{ order.id }}</td>
+                                <tr class="border-light">
                                     <td>
-                                        {% if order.name is defined %}
-                                        {{ order.name }} {{ order.surname }}
-                                        {% else %}
-                                        Customer #{{ order.id }}
-                                        {% endif %}
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
+                                                <i class="bi bi-receipt"></i>
+                                            </div>
+                                            <div>
+                                                <strong>#{{ order.id }}</strong>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td>{{ order.totalPrice|default(0)|number_format(0, ',', ' ') }} F CFA</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                                <i class="bi bi-person"></i>
+                                            </div>
+                                            <div>
+                                                {# AFFICHAGE DU NOM ET PRÉNOM DU CLIENT - VERSION SIMPLIFIÉE #}
+                                                {% if order.customer is defined and order.customer is not null %}
+                                                    <div class="fw-medium">{{ order.customer.name|default('') }} {{ order.customer.surname|default('') }}</div>
+                                                    {% if order.customer.phone is defined and order.customer.phone is not empty %}
+                                                        <small class="text-muted d-block">
+                                                            <i class="bi bi-telephone"></i> {{ order.customer.phone }}
+                                                        </small>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <div class="fw-medium">Client #{{ order.id }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">{{ order.totalPrice|default(0)|number_format(0, ',', ' ') }} F CFA</div>
+                                        <small class="text-muted">{{ order.items|default(0) }} article(s)</small>
+                                    </td>
                                     <td>
                                         {% if order.orderState == 'FINISHED' %}
-                                        <span class="badge bg-success">Completed</span>
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill py-1 px-3">
+                                            <i class="bi bi-check-circle me-1"></i> Complétée
+                                        </span>
                                         {% elseif order.orderState == 'PENDING' %}
-                                        <span class="badge bg-warning">Pending</span>
+                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill py-1 px-3">
+                                            <i class="bi bi-clock me-1"></i> En attente
+                                        </span>
                                         {% elseif order.orderState == 'CANCELLED' %}
-                                        <span class="badge bg-danger">Cancelled</span>
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill py-1 px-3">
+                                            <i class="bi bi-x-circle me-1"></i> Annulée
+                                        </span>
+                                        {% elseif order.orderState == 'DELIVERY' %}
+                                        <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill py-1 px-3">
+                                            <i class="bi bi-truck me-1"></i> Livraison
+                                        </span>
                                         {% else %}
-                                        <span class="badge bg-secondary">{{ order.orderState }}</span>
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill py-1 px-3">
+                                            {{ order.orderState }}
+                                        </span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
+                                    <td>
+                                        <div class="fw-bold">{{ order.orderDate|date('d/m/Y') }}</div>
+                                        <small class="text-muted">{{ order.orderDate|date('H:i') }}</small>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{{ path('app_orders_show', {'id': order.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                            <i class="bi bi-eye me-1"></i> Détails
+                                        </a>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     {% else %}
-                    <div class="text-center py-4">
-                        <i class="bi bi-receipt fs-1 text-muted mb-3"></i>
-                        <p class="text-muted">No recent orders found</p>
+                    <div class="text-center py-5">
+                        <div class="mb-3">
+                            <i class="bi bi-receipt fs-1 text-muted opacity-25"></i>
+                        </div>
+                        <h5 class="text-muted">Aucune commande récente</h5>
+                        <p class="text-muted mb-0">Les nouvelles commandes apparaîtront ici</p>
                     </div>
                     {% endif %}
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Order Status Overview</h5>
+        
+        <!-- Vue d'ensemble des statuts -->
+        <div class="col-xl-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pb-0 pt-3">
+                    <h5 class="card-title mb-1">Statut des Commandes</h5>
+                    <p class="text-muted mb-0">Vue d'ensemble des commandes</p>
                 </div>
                 <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-4">
-                            <div class="p-3">
-                                <h2 class="text-warning">{{ pendingOrders|default(0) }}</h2>
-                                <p class="text-muted mb-0">Pending</p>
+                    <!-- Graphique circulaire -->
+                    <div class="position-relative mb-4" style="height: 200px;">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                    
+                    <!-- Légende et statistiques -->
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="border-start border-3 border-warning ps-3 py-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning bg-opacity-10 rounded p-2 me-2">
+                                        <i class="bi bi-clock text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0">{{ pendingOrders|default(0) }}</h4>
+                                        <small class="text-muted">En attente</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-4">
-                            <div class="p-3">
-                                <h2 class="text-success">{{ finishedOrders|default(0) }}</h2>
-                                <p class="text-muted mb-0">Completed</p>
+                        <div class="col-6">
+                            <div class="border-start border-3 border-success ps-3 py-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success bg-opacity-10 rounded p-2 me-2">
+                                        <i class="bi bi-check-circle text-success"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0">{{ finishedOrders|default(0) }}</h4>
+                                        <small class="text-muted">Complétées</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-4">
-                            <div class="p-3">
-                                <h2 class="text-danger">{{ cancelledOrders|default(0) }}</h2>
-                                <p class="text-muted mb-0">Cancelled</p>
+                        <div class="col-6">
+                            <div class="border-start border-3 border-danger ps-3 py-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-danger bg-opacity-10 rounded p-2 me-2">
+                                        <i class="bi bi-x-circle text-danger"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0">{{ cancelledOrders|default(0) }}</h4>
+                                        <small class="text-muted">Annulées</small>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="border-start border-3 border-info ps-3 py-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-info bg-opacity-10 rounded p-2 me-2">
+                                        <i class="bi bi-truck text-info"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0">{{ deliveryOrders|default(0) }}</h4>
+                                        <small class="text-muted">Livraison</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Troisième ligne : Statistiques quotidiennes -->
+    <div class="row g-4">
+        <!-- Statistiques du jour -->
+        <div class="col-xl-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pb-0 pt-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title mb-1">Statistiques du Jour</h5>
+                            <p class="text-muted mb-0">{{ "now"|date("d/m/Y") }}</p>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-pill py-1 px-3">
+                            <i class="bi bi-calendar-day me-1"></i> Aujourd'hui
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body text-center py-4">
+                                    <div class="mb-3">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                            <i class="bi bi-cash-stack fs-4"></i>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-1">{{ dailyRevenue|default(0)|number_format(0, ',', ' ') }} <small class="fs-6">F CFA</small></h3>
+                                    <p class="text-muted mb-0">Revenu du jour</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body text-center py-4">
+                                    <div class="mb-3">
+                                        <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                            <i class="bi bi-cart fs-4"></i>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-1">{{ dailyOrders|default(0) }}</h3>
+                                    <p class="text-muted mb-0">Commandes du jour</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Graphique des commandes heure par heure -->
+                    <div class="mt-4">
+                        <h6 class="mb-3">Activité horaire</h6>
+                        <div class="row g-2">
+                            {% for hour in 9..21 %}
+                            <div class="col">
+                                <div class="text-center">
+                                    <div class="mb-2">
+                                        <div class="bg-primary bg-opacity-10 rounded" style="height: {{ random(20, 80) }}px;"></div>
+                                    </div>
+                                    <small class="text-muted">{{ hour }}h</small>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Daily Stats</h5>
+        <!-- Produits les plus populaires -->
+        <div class="col-xl-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pb-0 pt-3">
+                    <h5 class="card-title mb-1">Produits Populaires</h5>
+                    <p class="text-muted mb-0">Les meilleures ventes du mois</p>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <p class="text-muted mb-1">Today's Revenue</p>
-                            <h4>{{ dailyRevenue|default(0)|number_format(0, ',', ' ') }} F CFA</h4>
+                    <div class="list-group list-group-flush">
+                        {% for i in 1..5 %}
+                        <div class="list-group-item border-0 px-0 py-3">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary bg-opacity-10 rounded-3 p-3">
+                                        <i class="bi bi-cup-straw text-primary fs-4"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Burger Spécial</h6>
+                                            <small class="text-muted">Catégorie: Burgers</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <h6 class="mb-1">128 ventes</h6>
+                                            <small class="text-success">
+                                                <i class="bi bi-arrow-up"></i> 24.5%
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="progress mt-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ random(60, 95) }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <p class="text-muted mb-1">Today's Orders</p>
-                            <h4>{{ dailyOrders|default(0) }}</h4>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mt-4 pt-2 border-top">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">Performances globales</h6>
+                                <small class="text-muted">Moyenne des ventes ce mois</small>
+                            </div>
+                            <div class="text-end">
+                                <h4 class="mb-0 text-success">+18.2%</h4>
+                                <small class="text-muted">vs mois dernier</small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -183,4 +412,291 @@
         </div>
     </div>
 </div>
+
+<!-- Styles spécifiques au dashboard -->
+<style>
+/* Cartes de statistiques */
+.stat-card {
+    border: none;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    z-index: 2;
+}
+
+.stat-card.revenue-card::before {
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+}
+
+.stat-card.orders-card::before {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+}
+
+.stat-card.customers-card::before {
+    background: linear-gradient(90deg, #f39c12, #e67e22);
+}
+
+.stat-card.pending-card::before {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+}
+
+.stat-card .icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.stat-card.revenue-card .icon-wrapper {
+    background: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+}
+
+.stat-card.orders-card .icon-wrapper {
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+}
+
+.stat-card.customers-card .icon-wrapper {
+    background: rgba(243, 156, 18, 0.1);
+    color: #f39c12;
+}
+
+.stat-card.pending-card .icon-wrapper {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+/* Badges personnalisés */
+.badge {
+    font-weight: 500;
+    padding: 6px 12px;
+}
+
+/* Cartes avec ombres améliorées */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Table améliorée */
+.table th {
+    font-weight: 600;
+    color: var(--secondary-color);
+    background: rgba(44, 62, 80, 0.02);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+}
+
+.table td {
+    padding: 16px;
+    vertical-align: middle;
+}
+
+/* Progress bars */
+.progress {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+/* Graphique circulaire */
+#orderStatusChart {
+    width: 200px !important;
+    height: 200px !important;
+    margin: 0 auto;
+}
+
+/* Animation des cartes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-card, .card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Délais d'animation */
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stat-card .icon-wrapper {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .stat-card h2 {
+        font-size: 1.5rem;
+    }
+    
+    .table-responsive {
+        font-size: 14px;
+    }
+}
+</style>
+
+<!-- Chart.js pour les graphiques -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Graphique circulaire des statuts de commande
+    const ctx = document.getElementById('orderStatusChart').getContext('2d');
+    
+    // Données pour le graphique (à remplacer par vos données réelles)
+    const data = {
+        labels: ['En attente', 'Complétées', 'Annulées', 'Livraison'],
+        datasets: [{
+            data: [
+                {{ pendingOrders|default(10) }},
+                {{ finishedOrders|default(50) }},
+                {{ cancelledOrders|default(5) }},
+                {{ deliveryOrders|default(15) }}
+            ],
+            backgroundColor: [
+                'rgba(243, 156, 18, 0.8)',
+                'rgba(39, 174, 96, 0.8)',
+                'rgba(231, 76, 60, 0.8)',
+                'rgba(52, 152, 219, 0.8)'
+            ],
+            borderColor: [
+                '#f39c12',
+                '#27ae60',
+                '#e74c3c',
+                '#3498db'
+            ],
+            borderWidth: 2,
+            hoverOffset: 15
+        }]
+    };
+    
+    const config = {
+        type: 'doughnut',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.parsed + ' commandes';
+                            return label;
+                        }
+                    }
+                }
+            },
+            cutout: '70%'
+        }
+    };
+    
+    new Chart(ctx, config);
+    
+    // Animation des cartes au scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animated');
+            }
+        });
+    }, observerOptions);
+    
+    // Observer toutes les cartes
+    document.querySelectorAll('.card, .stat-card').forEach(card => {
+        observer.observe(card);
+    });
+    
+    // Mise à jour en temps réel (simulé)
+    function updateLiveStats() {
+        const revenueElement = document.querySelector('.revenue-card .card-title');
+        const ordersElement = document.querySelector('.orders-card .card-title');
+        
+        if (revenueElement && ordersElement) {
+            // Animation de comptage (exemple)
+            const currentRevenue = parseFloat(revenueElement.textContent.replace(/[^\d]/g, ''));
+            const currentOrders = parseInt(ordersElement.textContent);
+            
+            // Simuler une légère augmentation
+            const newRevenue = currentRevenue + Math.floor(Math.random() * 1000);
+            const newOrders = currentOrders + Math.floor(Math.random() * 3);
+            
+            // Animer le changement
+            animateCount(revenueElement, currentRevenue, newRevenue, ' F CFA');
+            animateCount(ordersElement, currentOrders, newOrders, '');
+        }
+    }
+    
+    function animateCount(element, start, end, suffix) {
+        const duration = 1000;
+        const startTime = Date.now();
+        
+        function update() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            const current = Math.floor(start + (end - start) * progress);
+            element.textContent = current.toLocaleString('fr-FR') + suffix;
+            
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        }
+        
+        requestAnimationFrame(update);
+    }
+    
+    // Mettre à jour les stats toutes les 30 secondes (démonstration)
+    // setInterval(updateLiveStats, 30000);
+});
+</script>
 {% endblock %}

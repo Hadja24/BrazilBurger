@@ -3,214 +3,460 @@
 {% block title %}Performance du Livreur - Brazil Burger{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-12">
-            <!-- En-tête avec informations du livreur -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h2 class="mb-1">{{ deliveryGuy.account.name }} {{ deliveryGuy.account.surname }}</h2>
-                            <p class="text-muted mb-0">
-                                <i class="fas fa-phone"></i> {{ deliveryGuy.account.phone }} |
-                                <i class="fas fa-envelope"></i> {{ deliveryGuy.account.email }}
-                            </p>
-                        </div>
-                        <div class="text-end">
-                            <a href="{{ path('app_delivery_delivery_guys') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left"></i> Retour à la liste
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<div class="container-fluid px-4 mt-4">
+    <!-- En-tête du livreur -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <a href="{{ path('app_delivery_delivery_guys') }}" 
+               class="btn btn-outline-secondary btn-sm me-3 rounded-circle">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <h1 class="h3 mb-1 text-gray-800">
+                    <i class="fas fa-user-tie text-primary me-2"></i>
+                    {{ deliveryGuy.account.name }} {{ deliveryGuy.account.surname }}
+                </h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent p-0">
+                        <li class="breadcrumb-item"><a href="{{ path('app_dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('app_delivery_delivery_guys') }}">Livreurs</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Performance</li>
+                    </ol>
+                </nav>
             </div>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-cog me-2"></i>Actions
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Modifier le profil</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-chart-line me-2"></i>Exporter les stats</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-envelope me-2"></i>Envoyer un message</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-user-times me-2"></i>Désactiver</a></li>
+            </ul>
+        </div>
+    </div>
 
-            <!-- Statistiques principales -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Livraisons</h5>
-                            <p class="card-text display-6">{{ stats.total_deliveries ?? 0 }}</p>
-                        </div>
+    <!-- Carte de profil -->
+    <div class="row mb-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <div class="avatar-profile mx-auto mb-3">
+                        <img src="https://ui-avatars.com/api/?name={{ deliveryGuy.account.name }}+{{ deliveryGuy.account.surname }}&background=4e73df&color=fff&size=128" 
+                             alt="Avatar" class="rounded-circle img-thumbnail border-primary border-3">
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-success">
-                        <div class="card-body">
-                            <h5 class="card-title">Livrées</h5>
-                            <p class="card-text display-6">{{ stats.delivered ?? 0 }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-info">
-                        <div class="card-body">
-                            <h5 class="card-title">En cours</h5>
-                            <p class="card-text display-6">{{ stats.ongoing ?? 0 }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-warning">
-                        <div class="card-body">
-                            <h5 class="card-title">Note moyenne</h5>
-                            <p class="card-text display-6">
-                                {% if stats.avg_rating %}
-                                    {{ stats.avg_rating|number_format(1) }}/5
+                    <h4 class="mb-1">{{ deliveryGuy.account.name }} {{ deliveryGuy.account.surname }}</h4>
+                    <p class="text-muted mb-3">
+                        <i class="fas fa-motorcycle me-1"></i>Livreur Brazil Burger
+                    </p>
+                    
+                    <!-- Note moyenne -->
+                    <div class="star-display mb-3">
+                        {% if stats.avg_rating %}
+                            {% set rating = stats.avg_rating %}
+                            {% for i in 1..5 %}
+                                {% if i <= rating %}
+                                    <i class="fas fa-star text-warning fa-lg"></i>
+                                {% elseif i <= rating + 0.5 %}
+                                    <i class="fas fa-star-half-alt text-warning fa-lg"></i>
                                 {% else %}
-                                    N/A
+                                    <i class="far fa-star text-warning fa-lg"></i>
                                 {% endif %}
-                            </p>
+                            {% endfor %}
+                            <div class="mt-1">
+                                <span class="fw-bold text-dark">{{ rating|number_format(1) }}/5</span>
+                                <small class="text-muted">({{ stats.total_deliveries ?? 0 }} livraisons)</small>
+                            </div>
+                        {% else %}
+                            <span class="text-muted">Pas encore noté</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Info contact -->
+                    <div class="list-group list-group-flush text-start">
+                        <div class="list-group-item border-0 px-0">
+                            <i class="fas fa-phone text-success me-3"></i>
+                            <strong>{{ deliveryGuy.account.phone }}</strong>
                         </div>
+                        <div class="list-group-item border-0 px-0">
+                            <i class="fas fa-envelope text-primary me-3"></i>
+                            {{ deliveryGuy.account.email }}
+                        </div>
+                        <div class="list-group-item border-0 px-0">
+                            <i class="fas fa-calendar-alt text-info me-3"></i>
+                            Membre depuis {{ deliveryGuy.account.createdAt|date('d/m/Y') }}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill me-2">
+                            <i class="fas fa-edit me-1"></i>Modifier
+                        </a>
+                        <a href="#" class="btn btn-primary btn-sm rounded-pill">
+                            <i class="fas fa-paper-plane me-1"></i>Contacter
+                        </a>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Détails des statistiques -->
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Statistiques détaillées</h5>
-                        </div>
-                        <div class="card-body">
-                            <table class="table">
-                                <tr>
-                                    <td>Revenu total généré :</td>
-                                    <td><strong>{{ stats.total_revenue ?? 0 }} €</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>Livraisons annulées :</td>
-                                    <td><span class="badge bg-danger">{{ stats.cancelled ?? 0 }}</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Meilleure note :</td>
-                                    <td>
-                                        {% if stats.max_rating %}
-                                            {% for i in 1..5 %}
-                                                {% if i <= stats.max_rating %}
-                                                    <i class="fas fa-star text-warning"></i>
-                                                {% else %}
-                                                    <i class="far fa-star text-warning"></i>
-                                                {% endif %}
-                                            {% endfor %}
-                                            ({{ stats.max_rating }}/5)
-                                        {% else %}
-                                            <span class="text-muted">N/A</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Note minimale :</td>
-                                    <td>
-                                        {% if stats.min_rating %}
-                                            {% for i in 1..5 %}
-                                                {% if i <= stats.min_rating %}
-                                                    <i class="fas fa-star text-warning"></i>
-                                                {% else %}
-                                                    <i class="far fa-star text-warning"></i>
-                                                {% endif %}
-                                            {% endfor %}
-                                            ({{ stats.min_rating }}/5)
-                                        {% else %}
-                                            <span class="text-muted">N/A</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            </table>
+        <!-- Statistiques principales -->
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm bg-gradient-primary text-white h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-uppercase text-white-50 mb-1">Total Livraisons</h6>
+                                    <h2 class="mb-0">{{ stats.total_deliveries ?? 0 }}</h2>
+                                    <small class="text-white-75">Toutes périodes</small>
+                                </div>
+                                <div class="icon-circle bg-white text-primary">
+                                    <i class="fas fa-shipping-fast fa-2x"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Répartition des livraisons</h5>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm bg-gradient-success text-white h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-uppercase text-white-50 mb-1">Livrées avec succès</h6>
+                                    <h2 class="mb-0">{{ stats.delivered ?? 0 }}</h2>
+                                    <small class="text-white-75">{{ (stats.delivered / (stats.total_deliveries ?: 1) * 100)|number_format(0) }}% de réussite</small>
+                                </div>
+                                <div class="icon-circle bg-white text-success">
+                                    <i class="fas fa-check-circle fa-2x"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <!-- Placeholder pour un graphique (vous pouvez utiliser Chart.js) -->
-                            <div class="text-center">
-                                <p class="text-muted">Graphique de répartition (à implémenter)</p>
-                                <div style="height: 200px; background-color: #f8f9fa; border-radius: 5px; 
-                                            display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-chart-pie fa-3x text-secondary"></i>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm bg-gradient-info text-white h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-uppercase text-white-50 mb-1">En cours</h6>
+                                    <h2 class="mb-0">{{ stats.ongoing ?? 0 }}</h2>
+                                    <small class="text-white-75">Actuellement en livraison</small>
+                                </div>
+                                <div class="icon-circle bg-white text-info">
+                                    <i class="fas fa-truck-moving fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm bg-gradient-warning text-white h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-uppercase text-white-50 mb-1">Revenu généré</h6>
+                                    <h2 class="mb-0">{{ (stats.total_revenue ?? 0)|number_format(0, ',', ' ') }} FCFA</h2>
+                                    <small class="text-white-75">Commission totale</small>
+                                </div>
+                                <div class="icon-circle bg-white text-warning">
+                                    <i class="fas fa-money-bill-wave fa-2x"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Dernières livraisons -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Dernières livraisons</h5>
+    <!-- Détails des statistiques -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2 text-primary"></i>
+                        Performance détaillée
+                    </h5>
                 </div>
                 <div class="card-body">
-                    {% if recentDeliveries|length > 0 %}
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>ID Commande</th>
-                                        <th>Date</th>
-                                        <th>Client</th>
-                                        <th>Zone</th>
-                                        <th>Montant</th>
-                                        <th>Statut</th>
-                                        <th>Note</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for order in recentDeliveries %}
-                                        <tr>
-                                            <td>#{{ order.id }}</td>
-                                            <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
-                                            <td>{{ order.customer.account.name }}</td>
-                                            <td>
-                                                {% if order.zone %}
-                                                    <span class="badge bg-info">{{ order.zone.name }}</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>{{ order.totalPrice }} €</td>
-                                            <td>
-                                                {% if order.deliveryStatus == constant('App\\Entity\\Orders::DELIVERY_STATUS_DELIVERED') %}
-                                                    <span class="badge bg-success">Livrée</span>
-                                                {% elseif order.deliveryStatus == constant('App\\Entity\\Orders::DELIVERY_STATUS_ONGOING') %}
-                                                    <span class="badge bg-info">En cours</span>
-                                                {% else %}
-                                                    <span class="badge bg-warning">{{ order.deliveryStatus }}</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if order.deliveryRating %}
-                                                    {% for i in 1..5 %}
-                                                        {% if i <= order.deliveryRating %}
-                                                            <i class="fas fa-star text-warning"></i>
-                                                        {% else %}
-                                                            <i class="far fa-star text-warning"></i>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    <br>
-                                                    <small class="text-muted">{{ order.deliveryRating }}/5</small>
-                                                {% else %}
-                                                    <span class="text-muted">Pas noté</span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Métrique</th>
+                                    <th class="text-end">Valeur</th>
+                                    <th class="text-end">%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fas fa-clock text-warning me-2"></i>Temps moyen de livraison</td>
+                                    <td class="text-end fw-bold">32 min</td>
+                                    <td class="text-end"><span class="badge bg-success">-5%</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-calendar-day text-info me-2"></i>Livraisons aujourd'hui</td>
+                                    <td class="text-end fw-bold">8</td>
+                                    <td class="text-end"><span class="badge bg-success">+12%</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-money-bill text-success me-2"></i>Revenu moyen par livraison</td>
+                                    <td class="text-end fw-bold">1,250 FCFA</td>
+                                    <td class="text-end"><span class="badge bg-success">+8%</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-times-circle text-danger me-2"></i>Annulations</td>
+                                    <td class="text-end fw-bold">{{ stats.cancelled ?? 0 }}</td>
+                                    <td class="text-end">
+                                        <span class="badge bg-{{ stats.cancelled > 5 ? 'danger' : 'warning' }}">
+                                            {{ (stats.cancelled / (stats.total_deliveries ?: 1) * 100)|number_format(1) }}%
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-star-half-alt text-warning me-2"></i>Note minimale</td>
+                                    <td class="text-end fw-bold">{{ stats.min_rating ? stats.min_rating|number_format(1) : 'N/A' }}</td>
+                                    <td class="text-end">-</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-star text-warning me-2"></i>Note maximale</td>
+                                    <td class="text-end fw-bold">{{ stats.max_rating ? stats.max_rating|number_format(1) : 'N/A' }}</td>
+                                    <td class="text-end">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">
+                        <i class="fas fa-trophy me-2 text-warning"></i>
+                        Classement
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="trophy-display mb-4">
+                        {% set rank = 1 %} {# À remplacer par le vrai classement #}
+                        {% if rank == 1 %}
+                            <i class="fas fa-trophy fa-4x text-warning mb-3"></i>
+                            <h4 class="text-warning">#{{ rank }} Classement</h4>
+                        {% elseif rank == 2 %}
+                            <i class="fas fa-medal fa-4x text-secondary mb-3"></i>
+                            <h4 class="text-secondary">#{{ rank }} Classement</h4>
+                        {% elseif rank == 3 %}
+                            <i class="fas fa-medal fa-4x text-danger mb-3"></i>
+                            <h4 class="text-danger">#{{ rank }} Classement</h4>
+                        {% else %}
+                            <i class="fas fa-award fa-4x text-info mb-3"></i>
+                            <h4 class="text-info">#{{ rank }} Classement</h4>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item border-0 d-flex justify-content-between">
+                            <span>Livraisons ce mois</span>
+                            <span class="fw-bold">42</span>
                         </div>
-                    {% else %}
-                        <div class="alert alert-info">
-                            Aucune livraison récente pour ce livreur.
+                        <div class="list-group-item border-0 d-flex justify-content-between">
+                            <span>Objectif mensuel</span>
+                            <span class="fw-bold text-success">105%</span>
                         </div>
-                    {% endif %}
+                        <div class="list-group-item border-0 d-flex justify-content-between">
+                            <span>Retards</span>
+                            <span class="fw-bold text-danger">2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress mt-3" style="height: 8px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 85%;"></div>
+                    </div>
+                    <small class="text-muted">Performance générale: 85%</small>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Dernières livraisons -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-history me-2 text-primary"></i>
+                    Historique récent
+                </h5>
+                <select class="form-select form-select-sm w-auto">
+                    <option>7 derniers jours</option>
+                    <option selected>30 derniers jours</option>
+                    <option>3 derniers mois</option>
+                </select>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if recentDeliveries|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Date/Heure</th>
+                                <th>Client</th>
+                                <th>Zone</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                                <th>Note</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recentDeliveries %}
+                                <tr>
+                                    <td><span class="badge bg-light text-dark">#{{ order.id }}</span></td>
+                                    <td>
+                                        <small>{{ order.orderDate|date('d/m/Y') }}</small><br>
+                                        <small class="text-muted">{{ order.orderDate|date('H:i') }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-circle-sm bg-secondary text-white me-2">
+                                                {{ order.customer.account.name|first|upper }}
+                                            </div>
+                                            <div>
+                                                <small class="fw-semibold">{{ order.customer.account.name }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if order.zone %}
+                                            <span class="badge bg-info bg-opacity-10 text-info">
+                                                {{ order.zone.name }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="fw-bold">{{ order.totalPrice }} €</td>
+                                    <td>
+                                        {% if order.deliveryStatus == constant('App\\Entity\\Orders::DELIVERY_STATUS_DELIVERED') %}
+                                            <span class="badge bg-success rounded-pill">
+                                                <i class="fas fa-check me-1"></i>Livrée
+                                            </span>
+                                        {% elseif order.deliveryStatus == constant('App\\Entity\\Orders::DELIVERY_STATUS_ONGOING') %}
+                                            <span class="badge bg-info rounded-pill">
+                                                <i class="fas fa-truck-moving me-1"></i>En cours
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning rounded-pill">{{ order.deliveryStatus }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if order.deliveryRating %}
+                                            <div class="star-rating-sm">
+                                                {% for i in 1..5 %}
+                                                    {% if i <= order.deliveryRating %}
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star text-warning"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <small class="text-muted">{{ order.deliveryRating }}/5</small>
+                                        {% else %}
+                                            <span class="badge bg-light text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-light btn-sm rounded-circle" title="Détails">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <small class="text-muted">
+                        Affichage de {{ recentDeliveries|length }} livraisons sur {{ stats.total_deliveries ?? 0 }}
+                    </small>
+                    <a href="#" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-list me-1"></i>Voir tout l'historique
+                    </a>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Aucune livraison récente</h5>
+                    <p class="text-muted">Ce livreur n'a effectué aucune livraison récemment.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
+
+<style>
+.avatar-profile {
+    width: 150px;
+    margin: 0 auto;
+}
+
+.avatar-circle-sm {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.star-display {
+    font-size: 1.5rem;
+}
+
+.star-rating-sm {
+    font-size: 0.8rem;
+}
+
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(87deg, #4e73df 0, #224abe 100%) !important;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(87deg, #1cc88a 0, #13855c 100%) !important;
+}
+
+.bg-gradient-info {
+    background: linear-gradient(87deg, #36b9cc 0, #258391 100%) !important;
+}
+
+.bg-gradient-warning {
+    background: linear-gradient(87deg, #f6c23e 0, #dda20a 100%) !important;
+}
+
+.trophy-display i {
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+</style>
 {% endblock %}

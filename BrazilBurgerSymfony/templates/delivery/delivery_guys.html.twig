@@ -3,110 +3,356 @@
 {% block title %}Livreurs - Brazil Burger{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1>Gestion des Livreurs</h1>
+<div class="container-fluid px-4 mt-4">
+    <!-- En-tête avec titre et stats -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-2 text-gray-800">🏍️ Gestion des Livreurs</h1>
+            <p class="text-muted">Performance et statistiques de vos équipes de livraison</p>
+        </div>
+        <div class="d-flex">
+            <button class="btn btn-primary shadow-sm rounded-pill px-4">
+                <i class="fas fa-plus me-2"></i>Ajouter un livreur
+            </button>
+        </div>
+    </div>
 
-    <!-- Filtre par statut -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Filtrer les performances des livreurs</h5>
-            <form method="get" action="{{ path('app_delivery_delivery_guys') }}" class="row g-3">
-                <div class="col-md-6">
-                    <label for="status" class="form-label">Afficher les livraisons avec le statut :</label>
-                    <select class="form-select" id="status" name="status">
-                        <option value="">Tous les statuts</option>
-                        {% for key, label in deliveryStatuses %}
-                            <option value="{{ key }}" {{ status == key ? 'selected' : '' }}>
-                                {{ label }}
-                            </option>
-                        {% endfor %}
-                    </select>
+    <!-- Stats globales -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary border-0 shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                                Livreurs actifs
+                            </div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ deliveryGuys|length }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-friends fa-2x text-primary"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6 align-self-end">
-                    <button type="submit" class="btn btn-primary">Filtrer</button>
-                    <a href="{{ path('app_delivery_delivery_guys') }}" class="btn btn-secondary">Réinitialiser</a>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success border-0 shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                                Livraisons aujourd'hui
+                            </div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">
+                                {{ deliveryGuys|map(item => item.deliveredDeliveries ?? 0)|reduce((carry, v) => carry + v) }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-shipping-fast fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info border-0 shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                                Note moyenne
+                            </div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">
+                                {% set totalRating = 0 %}
+                                {% set ratedCount = 0 %}
+                                {% for item in deliveryGuys %}
+                                    {% if item.averageRating > 0 %}
+                                        {% set totalRating = totalRating + item.averageRating %}
+                                        {% set ratedCount = ratedCount + 1 %}
+                                    {% endif %}
+                                {% endfor %}
+                                {{ (ratedCount > 0 ? totalRating / ratedCount : 0)|number_format(1) }}/5
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-star fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning border-0 shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                                En cours de livraison
+                            </div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">
+                                {{ deliveryGuys|map(item => item.ongoingDeliveries ?? 0)|reduce((carry, v) => carry + v) }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-truck-moving fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtre et recherche -->
+    <div class="card border-0 shadow-lg mb-4">
+        <div class="card-body p-4">
+            <h5 class="card-title mb-3">
+                <i class="fas fa-chart-line me-2 text-primary"></i>Performances des livreurs
+            </h5>
+            <form method="get" action="{{ path('app_delivery_delivery_guys') }}" class="row g-3">
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0">
+                            <i class="fas fa-filter text-primary"></i>
+                        </span>
+                        <select class="form-select border-0 shadow-none bg-light" id="status" name="status">
+                            <option value="">📊 Toutes les livraisons</option>
+                            {% for key, label in deliveryStatuses %}
+                                <option value="{{ key }}" {{ status == key ? 'selected' : '' }}>
+                                    {{ ['⌛', '🚚', '✅', '❌'][loop.index0] ?? '📌' }} {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary px-4 rounded-pill flex-fill">
+                            <i class="fas fa-chart-bar me-2"></i>Analyser
+                        </button>
+                        <a href="{{ path('app_delivery_delivery_guys') }}" class="btn btn-outline-secondary px-3 rounded-pill">
+                            <i class="fas fa-redo me-2"></i>Réinitialiser
+                        </a>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Liste des livreurs avec statistiques -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Statistiques des livreurs</h5>
+    <!-- Tableau des livreurs -->
+    <div class="card border-0 shadow-lg">
+        <div class="card-header bg-white py-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-dark">
+                    <i class="fas fa-list-alt me-2 text-primary"></i>Statistiques détaillées
+                </h5>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-download me-1"></i>Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-print me-1"></i>Imprimer
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
+        
+        <div class="card-body p-0">
             {% if deliveryGuys|length > 0 %}
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
                             <tr>
-                                <th>Livreur</th>
-                                <th>Contact</th>
-                                <th>Total Livraisons</th>
-                                <th>Livrées</th>
-                                <th>En cours</th>
-                                <th>En attente</th>
-                                <th>Note moyenne</th>
-                                <th>Actions</th>
+                                <th class="border-0 ps-4">
+                                    <i class="fas fa-user-tie text-muted me-2"></i>Livreur
+                                </th>
+                                <th class="border-0">
+                                    <i class="fas fa-phone text-muted me-2"></i>Contact
+                                </th>
+                                <th class="border-0 text-center">
+                                    <i class="fas fa-boxes text-muted me-2"></i>Total
+                                </th>
+                                <th class="border-0 text-center">
+                                    <i class="fas fa-check-circle text-muted me-2"></i>Livrées
+                                </th>
+                                <th class="border-0 text-center">
+                                    <i class="fas fa-truck-moving text-muted me-2"></i>En cours
+                                </th>
+                                <th class="border-0 text-center">
+                                    <i class="fas fa-clock text-muted me-2"></i>En attente
+                                </th>
+                                <th class="border-0 text-center">
+                                    <i class="fas fa-star text-muted me-2"></i>Satisfaction
+                                </th>
+                                <th class="border-0 pe-4 text-end">
+                                    <i class="fas fa-chart-line text-muted me-2"></i>Performance
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for item in deliveryGuys %}
                             {% set deliveryGuy = item.deliveryGuy %}
-                                <tr>
-                                    <td>
-                                        <strong>{{ deliveryGuy.account.name }} {{ deliveryGuy.account.surname }}</strong>
+                                <tr class="border-bottom">
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-circle bg-primary text-white me-3">
+                                                {{ deliveryGuy.account.name|first|upper }}
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">{{ deliveryGuy.account.name }} {{ deliveryGuy.account.surname }}</h6>
+                                                <small class="text-muted">ID: {{ deliveryGuy.id }}</small>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>
-                                        <small>{{ deliveryGuy.account.phone }}</small><br>
-                                        <small>{{ deliveryGuy.account.email }}</small>
+                                        <div class="contact-info">
+                                            <div class="d-flex align-items-center mb-1">
+                                                <i class="fas fa-phone text-success me-2"></i>
+                                                <small class="fw-semibold">{{ deliveryGuy.account.phone }}</small>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-envelope text-primary me-2"></i>
+                                                <small class="text-truncate" style="max-width: 150px;">
+                                                    {{ deliveryGuy.account.email }}
+                                                </small>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td>{{ item.totalDeliveries ?? 0 }}</td>
-                                    <td>
-                                        <span class="badge bg-success">{{ item.deliveredDeliveries ?? 0 }}</span>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2">
+                                            {{ item.totalDeliveries ?? 0 }}
+                                        </span>
                                     </td>
-                                    <td>
-                                        <span class="badge bg-info">{{ item.ongoingDeliveries ?? 0 }}</span>
+                                    <td class="text-center">
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2">
+                                            {{ item.deliveredDeliveries ?? 0 }}
+                                        </span>
                                     </td>
-                                    <td>
-                                        <span class="badge bg-warning">{{ item.pendingDeliveries ?? 0 }}</span>
+                                    <td class="text-center">
+                                        <span class="badge bg-info bg-opacity-10 text-info border border-info px-3 py-2">
+                                            {{ item.ongoingDeliveries ?? 0 }}
+                                        </span>
                                     </td>
-                                    <td>
+                                    <td class="text-center">
+                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning px-3 py-2">
+                                            {{ item.pendingDeliveries ?? 0 }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
                                         {% if item.averageRating > 0 %}
                                             {% set rating = item.averageRating %}
-                                            {% for i in 1..5 %}
-                                                {% if i <= rating %}
-                                                    <i class="fas fa-star text-warning"></i>
-                                                {% elseif i <= rating + 0.5 %}
-                                                    <i class="fas fa-star-half-alt text-warning"></i>
-                                                {% else %}
-                                                    <i class="far fa-star text-warning"></i>
-                                                {% endif %}
-                                            {% endfor %}
-                                            <br>
-                                            <small>({{ rating|number_format(1) }}/5)</small>
+                                            <div class="star-rating mb-1">
+                                                {% for i in 1..5 %}
+                                                    {% if i <= rating %}
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    {% elseif i <= rating + 0.5 %}
+                                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star text-warning"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <small class="fw-bold text-dark">{{ rating|number_format(1) }}/5</small>
                                         {% else %}
-                                            <span class="text-muted">Aucune note</span>
+                                            <span class="badge bg-light text-muted">Non noté</span>
                                         {% endif %}
                                     </td>
-                                    <td>
-                                        <a href="{{ path('app_delivery_delivery_guy_show', {'id': deliveryGuy.id}) }}" 
-                                           class="btn btn-info btn-sm">
-                                            <i class="fas fa-chart-line"></i> Détails
-                                        </a>
+                                    <td class="pe-4 text-end">
+                                        <div class="d-flex gap-2 justify-content-end">
+                                            <a href="{{ path('app_delivery_delivery_guy_show', {'id': deliveryGuy.id}) }}" 
+                                               class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                                <i class="fas fa-chart-line me-1"></i>Détails
+                                            </a>
+                                            <div class="dropdown">
+                                                <button class="btn btn-light btn-sm rounded-circle" 
+                                                        type="button" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li><a class="dropdown-item" href="#">
+                                                        <i class="fas fa-edit me-2"></i>Modifier
+                                                    </a></li>
+                                                    <li><a class="dropdown-item" href="#">
+                                                        <i class="fas fa-envelope me-2"></i>Contacter
+                                                    </a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item text-danger" href="#">
+                                                        <i class="fas fa-trash-alt me-2"></i>Archiver
+                                                    </a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- Légende -->
+                <div class="card-footer bg-white border-top py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Total : {{ deliveryGuys|length }} livreur(s) • 
+                                Dernière mise à jour : {{ "now"|date("H:i") }}
+                            </small>
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             {% else %}
-                <div class="alert alert-warning">
-                    Aucun livreur trouvé.
+                <div class="text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-user-slash fa-4x text-muted mb-4"></i>
+                        <h4 class="text-muted">Aucun livreur trouvé</h4>
+                        <p class="text-muted">Commencez par ajouter vos premiers livreurs.</p>
+                        <a href="#" class="btn btn-primary mt-2 rounded-pill px-4">
+                            <i class="fas fa-plus me-2"></i>Ajouter un livreur
+                        </a>
+                    </div>
                 </div>
             {% endif %}
         </div>
     </div>
 </div>
+
+<style>
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.star-rating {
+    font-size: 0.9rem;
+}
+
+.border-left-primary { border-left: 4px solid #4e73df !important; }
+.border-left-success { border-left: 4px solid #1cc88a !important; }
+.border-left-info { border-left: 4px solid #36b9cc !important; }
+.border-left-warning { border-left: 4px solid #f6c23e !important; }
+
+.contact-info small {
+    font-size: 0.85rem;
+}
+
+.card-header.bg-gradient-primary {
+    background: linear-gradient(87deg, #4e73df 0, #224abe 100%) !important;
+}
+</style>
 {% endblock %}

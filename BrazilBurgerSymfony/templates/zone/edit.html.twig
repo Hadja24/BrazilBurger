@@ -7,66 +7,112 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        :root {
-            --brazil-green: #009739;
-            --brazil-yellow: #FEDD00;
-            --brazil-blue: #012169;
-            --brazil-white: #FFFFFF;
-            --brazil-gray: #F5F5F5;
-            --brazil-dark: #333333;
+        .edit-zone-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: calc(100vh - 150px);
         }
         
         .edit-header {
-            background: linear-gradient(135deg, var(--brazil-blue), var(--brazil-green));
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.95), rgba(52, 73, 94, 0.95));
             color: white;
-            padding: 30px;
-            border-radius: 12px;
+            padding: 40px 0;
             margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         
-        .tab-content {
-            background: var(--brazil-white);
-            border-radius: 12px;
+        .edit-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e63946' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        .zone-price-badge {
+            background: linear-gradient(135deg, #e63946, #d32f2f);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab-content-container {
+            background: white;
+            border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
         }
         
         .nav-tabs {
-            border-bottom: 3px solid var(--brazil-gray);
+            border-bottom: 3px solid rgba(44, 62, 80, 0.1);
+            margin-bottom: 30px;
         }
         
         .nav-tabs .nav-link {
             border: none;
-            color: var(--brazil-dark);
+            color: #636e72;
             font-weight: 600;
-            padding: 12px 25px;
-            border-radius: 8px 8px 0 0;
-            margin-right: 5px;
+            padding: 15px 30px;
+            border-radius: 10px 10px 0 0;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+            background: rgba(44, 62, 80, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
         }
         
         .nav-tabs .nav-link:hover {
-            background-color: var(--brazil-gray);
+            background: rgba(44, 62, 80, 0.1);
+            color: #2c3e50;
+            transform: translateY(-2px);
         }
         
         .nav-tabs .nav-link.active {
-            background: linear-gradient(135deg, var(--brazil-green), #00802C);
+            background: linear-gradient(135deg, #e63946, #d32f2f);
             color: white;
-            border: none;
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.2);
+        }
+        
+        .nav-tabs .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #e63946, #f39c12);
         }
         
         .neighbourhood-item {
-            background: var(--brazil-gray);
-            border-radius: 8px;
+            background: #f8f9fa;
+            border-radius: 10px;
             padding: 15px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
         }
         
         .neighbourhood-item:hover {
-            background: #e9ecef;
+            background: rgba(44, 62, 80, 0.05);
+            transform: translateX(5px);
+            border-color: rgba(230, 57, 70, 0.2);
         }
         
         .neighbourhood-actions {
@@ -75,280 +121,426 @@
         }
         
         .btn-delete {
-            background: linear-gradient(135deg, #EF476F, #FF6B6B);
+            background: linear-gradient(135deg, #e63946, #d32f2f);
             color: white;
             border: none;
-            border-radius: 20px;
-            padding: 6px 15px;
-            font-size: 12px;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.85rem;
             font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
         
         .btn-delete:hover {
-            background: linear-gradient(135deg, #FF6B6B, #EF476F);
+            background: linear-gradient(135deg, #d32f2f, #e63946);
             transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
         }
         
         .no-neighbourhoods {
             text-align: center;
-            padding: 40px;
-            color: #666;
+            padding: 50px 20px;
+            color: #636e72;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 2px dashed rgba(44, 62, 80, 0.1);
+        }
+        
+        .no-neighbourhoods i {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #e9ecef;
+            opacity: 0.5;
         }
         
         .deliveryguy-card {
-            background: var(--brazil-white);
-            border: 2px solid var(--brazil-gray);
+            background: white;
+            border: 2px solid rgba(0,0,0,0.05);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 15px;
             transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
         }
         
         .deliveryguy-card:hover {
-            border-color: var(--brazil-green);
-            transform: translateY(-2px);
+            border-color: rgba(230, 57, 70, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
         
         .btn-assign {
-            background: linear-gradient(135deg, var(--brazil-blue), #1A3A8F);
+            background: linear-gradient(135deg, #2c3e50, #34495e);
             color: white;
             border: none;
-            border-radius: 20px;
-            padding: 6px 15px;
-            font-size: 12px;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.85rem;
             font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
         
         .btn-assign:hover {
-            background: linear-gradient(135deg, #1A3A8F, var(--brazil-blue));
+            background: linear-gradient(135deg, #34495e, #2c3e50);
             transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3);
         }
         
         .info-box {
-            background: var(--brazil-gray);
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(52, 152, 219, 0.05));
             border-radius: 10px;
             padding: 20px;
             margin-top: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #e63946;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15);
+        }
+        
+        .input-group-text {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+        }
+        
+        .alert-success, .alert-danger {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 15px 20px;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(39, 174, 96, 0.05));
+            border-left: 4px solid #27ae60;
+            color: #27ae60;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(230, 57, 70, 0.05));
+            border-left: 4px solid #e63946;
+            color: #e63946;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-tabs .nav-link {
+                padding: 12px 15px;
+                margin-right: 5px;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content-container {
+                padding: 20px;
+            }
+            
+            .neighbourhood-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .neighbourhood-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
         }
     </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="edit-header">
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <div>
-                <h1 class="mb-2">
-                    <i class="fas fa-edit me-2"></i>
-                    Modifier la zone : {{ zone.name }}
-                </h1>
-                <p class="mb-0">
-                    <i class="fas fa-money-bill-wave me-2"></i>
-                    Prix de livraison : 
-                    {% if zone.deliveryPrice %}
-                        {{ zone.deliveryPrice|number_format(0, ',', ' ') }} FCFA
-                    {% else %}
-                        Gratuit
-                    {% endif %}
-                </p>
-            </div>
-            <div>
-                <a href="{{ path('app_zones_show', {'id': zone.id}) }}" class="btn btn-outline-light me-2">
-                    <i class="fas fa-eye me-2"></i>
-                    Voir le dashboard
-                </a>
-                <a href="{{ path('app_zones_index') }}" class="btn btn-light">
-                    <i class="fas fa-arrow-left me-2"></i>
-                    Retour aux zones
-                </a>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Messages flash -->
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-            <i class="fas fa-check-circle me-2"></i>
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-    
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-    
-    <!-- Onglets -->
-    <ul class="nav nav-tabs mb-4" id="zoneTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
-                <i class="fas fa-info-circle me-2"></i>
-                Informations
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="neighbourhoods-tab" data-bs-toggle="tab" data-bs-target="#neighbourhoods" type="button" role="tab">
-                <i class="fas fa-map-pin me-2"></i>
-                Quartiers ({{ neighbourhoods|length }})
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="deliveryguys-tab" data-bs-toggle="tab" data-bs-target="#deliveryguys" type="button" role="tab">
-                <i class="fas fa-truck me-2"></i>
-                Livreurs
-            </button>
-        </li>
-    </ul>
-    
-    <!-- Contenu des onglets -->
-    <div class="tab-content" id="zoneTabsContent">
-        <!-- Onglet 1 : Informations -->
-        <div class="tab-pane fade show active" id="info" role="tabpanel">
-            <h4 class="mb-4" style="color: var(--brazil-dark);">
-                <i class="fas fa-cog me-2"></i>
-                Modifier les informations de la zone
-            </h4>
-            
-            {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        {{ form_label(form.name, 'Nom de la zone', {'label_attr': {'class': 'form-label fw-medium'}}) }}
-                        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.name) }}
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        {{ form_label(form.deliveryPrice, 'Prix de livraison (FCFA)', {'label_attr': {'class': 'form-label fw-medium'}}) }}
-                        <div class="input-group">
-                            {{ form_widget(form.deliveryPrice, {'attr': {'class': 'form-control'}}) }}
-                            <span class="input-group-text">FCFA</span>
+<div class="edit-zone-section">
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="edit-header">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <h1 class="mb-3 fw-bold">
+                            <i class="fas fa-edit me-3"></i>
+                            Modifier la zone : {{ zone.name }}
+                        </h1>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="zone-price-badge">
+                                <i class="fas fa-truck"></i>
+                                {% if zone.deliveryPrice %}
+                                    {{ zone.deliveryPrice|number_format(0, ',', ' ') }} FCFA
+                                {% else %}
+                                    Livraison gratuite
+                                {% endif %}
+                            </span>
+                            <span class="badge bg-light text-dark">
+                                <i class="fas fa-map-pin me-1"></i>
+                                {{ neighbourhoods|length }} quartiers
+                            </span>
                         </div>
-                        <small class="form-text text-muted">Laissez vide pour la livraison gratuite</small>
-                        {{ form_errors(form.deliveryPrice) }}
+                    </div>
+                    <div class="mt-3 mt-md-0">
+                        <div class="d-flex gap-2">
+                            <a href="{{ path('app_zones_show', {'id': zone.id}) }}" class="btn btn-outline-light">
+                                <i class="fas fa-chart-line me-2"></i>
+                                Dashboard
+                            </a>
+                            <a href="{{ path('app_zones_index') }}" class="btn btn-light">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Retour
+                            </a>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="col-12">
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ path('app_zones_index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-2"></i>
-                            Annuler
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>
-                            Enregistrer les modifications
-                        </button>
-                    </div>
-                </div>
-            {{ form_end(form) }}
+            </div>
         </div>
         
-        <!-- Onglet 2 : Quartiers -->
-        <div class="tab-pane fade" id="neighbourhoods" role="tabpanel">
-            <div class="row">
-                <div class="col-md-6">
-                    <h4 class="mb-4" style="color: var(--brazil-dark);">
-                        <i class="fas fa-plus-circle me-2"></i>
-                        Ajouter un quartier
-                    </h4>
-                    
-                    {{ form_start(neighbourhoodForm, {'attr': {'class': 'row g-3'}}) }}
-                        <div class="col-12">
-                            <div class="mb-3">
-                                {{ form_label(neighbourhoodForm.name, 'Nom du quartier', {'label_attr': {'class': 'form-label fw-medium'}}) }}
-                                {{ form_widget(neighbourhoodForm.name, {'attr': {'class': 'form-control'}}) }}
-                                {{ form_errors(neighbourhoodForm.name) }}
+        <!-- Messages flash -->
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-check-circle me-3 fa-lg"></i>
+                    <div class="flex-grow-1">
+                        <strong class="fw-semibold">Succès !</strong>
+                        <p class="mb-0">{{ message }}</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        {% endfor %}
+        
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-circle me-3 fa-lg"></i>
+                    <div class="flex-grow-1">
+                        <strong class="fw-semibold">Erreur !</strong>
+                        <p class="mb-0">{{ message }}</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        {% endfor %}
+        
+        <!-- Onglets -->
+        <ul class="nav nav-tabs" id="zoneTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
+                    <i class="fas fa-cog"></i>
+                    <span class="d-none d-md-inline">Informations</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="neighbourhoods-tab" data-bs-toggle="tab" data-bs-target="#neighbourhoods" type="button" role="tab">
+                    <i class="fas fa-map-pin"></i>
+                    <span class="d-none d-md-inline">Quartiers</span>
+                    <span class="badge bg-primary ms-2">{{ neighbourhoods|length }}</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="deliveryguys-tab" data-bs-toggle="tab" data-bs-target="#deliveryguys" type="button" role="tab">
+                    <i class="fas fa-truck"></i>
+                    <span class="d-none d-md-inline">Livreurs</span>
+                </button>
+            </li>
+        </ul>
+        
+        <!-- Contenu des onglets -->
+        <div class="tab-content-container" id="zoneTabsContent">
+            <!-- Onglet 1 : Informations -->
+            <div class="tab-pane fade show active" id="info" role="tabpanel">
+                <h4 class="mb-4" style="color: #2c3e50;">
+                    <i class="fas fa-cog me-2"></i>
+                    Modifier les informations de la zone
+                </h4>
+                
+                {{ form_start(form, {'attr': {'class': 'row g-4'}}) }}
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form_label(form.name, 'Nom de la zone', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-map-marker-alt text-muted"></i>
+                                </span>
+                                {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Centre-ville'}}) }}
                             </div>
+                            {{ form_errors(form.name) }}
+                            <small class="form-text text-muted">Nom de la zone de livraison</small>
                         </div>
-                        
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-plus me-2"></i>
-                                Ajouter le quartier
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form_label(form.deliveryPrice, 'Prix de livraison', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-money-bill-wave text-muted"></i>
+                                </span>
+                                {{ form_widget(form.deliveryPrice, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 1000'}}) }}
+                                <span class="input-group-text bg-light">FCFA</span>
+                            </div>
+                            {{ form_errors(form.deliveryPrice) }}
+                            <small class="form-text text-muted">Laissez vide pour la livraison gratuite</small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <a href="{{ path('app_zones_index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>
+                                Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>
+                                Enregistrer les modifications
                             </button>
                         </div>
-                    {{ form_end(neighbourhoodForm) }}
+                    </div>
+                {{ form_end(form) }}
+            </div>
+            
+            <!-- Onglet 2 : Quartiers -->
+            <div class="tab-pane fade" id="neighbourhoods" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">
+                                    <i class="fas fa-plus-circle me-2 text-primary"></i>
+                                    Ajouter un quartier
+                                </h5>
+                                
+                                {{ form_start(neighbourhoodForm, {'attr': {'class': 'row g-3'}}) }}
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            {{ form_label(neighbourhoodForm.name, 'Nom du quartier', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light">
+                                                    <i class="fas fa-home text-muted"></i>
+                                                </span>
+                                                {{ form_widget(neighbourhoodForm.name, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Plateau'}}) }}
+                                            </div>
+                                            {{ form_errors(neighbourhoodForm.name) }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-success w-100">
+                                            <i class="fas fa-plus me-2"></i>
+                                            Ajouter le quartier
+                                        </button>
+                                    </div>
+                                {{ form_end(neighbourhoodForm) }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6 mt-4 mt-lg-0">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">
+                                    <i class="fas fa-list me-2 text-primary"></i>
+                                    Quartiers existants
+                                </h5>
+                                
+                                {% if neighbourhoods|length > 0 %}
+                                    <div class="neighbourhoods-list">
+                                        {% for neighbourhood in neighbourhoods %}
+                                            <div class="neighbourhood-item">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-map-pin text-primary me-3"></i>
+                                                    <span class="fw-semibold">{{ neighbourhood.name }}</span>
+                                                </div>
+                                                <div class="neighbourhood-actions">
+                                                    <form method="POST" 
+                                                          action="{{ path('app_zones_delete_neighbourhood', {
+                                                              'zoneId': zone.id,
+                                                              'neighbourhoodId': neighbourhood.id
+                                                          }) }}"
+                                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce quartier ?')">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_neighbourhood' ~ neighbourhood.id) }}">
+                                                        <button type="submit" class="btn btn-delete">
+                                                            <i class="fas fa-trash"></i>
+                                                            <span class="d-none d-md-inline">Supprimer</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="no-neighbourhoods">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        <h6 class="mt-3 mb-2">Aucun quartier dans cette zone</h6>
+                                        <p class="text-muted small">Ajoutez votre premier quartier en utilisant le formulaire</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Onglet 3 : Livreurs -->
+            <div class="tab-pane fade" id="deliveryguys" role="tabpanel">
+                <h5 class="mb-4" style="color: #2c3e50;">
+                    <i class="fas fa-truck-loading me-2"></i>
+                    Livreurs disponibles
+                </h5>
+                
+                <div class="info-box mb-4">
+                    <div class="d-flex">
+                        <i class="fas fa-info-circle text-info me-3 fa-lg"></i>
+                        <div>
+                            <h6 class="mb-2">Information</h6>
+                            <p class="mb-0">
+                                Pour affecter des livreurs à cette zone de manière permanente, il faut d'abord modifier l'entité Zone pour ajouter une relation avec DeliveryGuy.
+                                Actuellement, les livreurs sont affectés aux commandes individuellement.
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="col-md-6">
-                    <h4 class="mb-4" style="color: var(--brazil-dark);">
-                        <i class="fas fa-list me-2"></i>
-                        Quartiers existants
-                    </h4>
-                    
-                    {% if neighbourhoods|length > 0 %}
-                        {% for neighbourhood in neighbourhoods %}
-                            <div class="neighbourhood-item">
-                                <span class="fw-medium">{{ neighbourhood.name }}</span>
-                                <div class="neighbourhood-actions">
-                                    <form method="POST" 
-                                          action="{{ path('app_zones_delete_neighbourhood', {
-                                              'zoneId': zone.id,
-                                              'neighbourhoodId': neighbourhood.id
-                                          }) }}"
-                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce quartier ?')">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_neighbourhood' ~ neighbourhood.id) }}">
-                                        <button type="submit" class="btn btn-delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="no-neighbourhoods">
-                            <i class="fas fa-map-marked-alt fa-3x mb-3"></i>
-                            <p class="text-muted">Aucun quartier dans cette zone</p>
-                            <p class="text-muted small">Ajoutez votre premier quartier en utilisant le formulaire à gauche</p>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        
-        <!-- Onglet 3 : Livreurs -->
-        <div class="tab-pane fade" id="deliveryguys" role="tabpanel">
-            <h4 class="mb-4" style="color: var(--brazil-dark);">
-                <i class="fas fa-truck-loading me-2"></i>
-                Livreurs disponibles
-            </h4>
-            
-            <div class="info-box mb-4">
-                <h5 class="mb-2">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Information
-                </h5>
-                <p class="mb-0">
-                    Pour affecter des livreurs à cette zone de manière permanente, il faut d'abord modifier l'entité Zone pour ajouter une relation avec DeliveryGuy.
-                    Actuellement, les livreurs sont affectés aux commandes individuellement.
-                </p>
-            </div>
-            
-            {% if availableDeliveryGuys|length > 0 %}
-                <div class="row">
-                    {% for deliveryGuy in availableDeliveryGuys %}
-                        <div class="col-md-6">
-                            <div class="deliveryguy-card">
-                                <div class="row align-items-center">
-                                    <div class="col-8">
-                                        <h6 class="mb-1">{{ deliveryGuy.account.name }} {{ deliveryGuy.account.surname }}</h6>
-                                        <p class="mb-1 text-muted small">
-                                            <i class="fas fa-phone me-1"></i>
-                                            {{ deliveryGuy.account.phone }}
-                                        </p>
-                                        <p class="mb-0 text-muted small">
-                                            <i class="fas fa-envelope me-1"></i>
-                                            {{ deliveryGuy.account.email }}
-                                        </p>
+                {% if availableDeliveryGuys|length > 0 %}
+                    <div class="row">
+                        {% for deliveryGuy in availableDeliveryGuys %}
+                            <div class="col-md-6 col-lg-4">
+                                <div class="deliveryguy-card">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="avatar-circle bg-primary text-white me-3">
+                                            {{ deliveryGuy.account.name|first|upper }}
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">{{ deliveryGuy.account.name }} {{ deliveryGuy.account.surname }}</h6>
+                                            <small class="text-muted">Livreur</small>
+                                        </div>
                                     </div>
-                                    <div class="col-4 text-end">
+                                    
+                                    <div class="contact-details mb-3">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fas fa-phone text-success me-2 fa-sm"></i>
+                                            <small class="text-muted">{{ deliveryGuy.account.phone }}</small>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-envelope text-primary me-2 fa-sm"></i>
+                                            <small class="text-muted text-truncate">{{ deliveryGuy.account.email }}</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-end">
                                         <form method="POST" 
                                               action="{{ path('app_zones_assign_deliveryguy', {
                                                   'zoneId': zone.id,
@@ -363,16 +555,16 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="no-neighbourhoods">
-                    <i class="fas fa-truck fa-3x mb-3"></i>
-                    <p class="text-muted">Aucun livreur disponible</p>
-                    <p class="text-muted small">Créez d'abord des comptes livreurs</p>
-                </div>
-            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-neighbourhoods">
+                        <i class="fas fa-truck"></i>
+                        <h6 class="mt-3 mb-2">Aucun livreur disponible</h6>
+                        <p class="text-muted small">Créez d'abord des comptes livreurs</p>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
@@ -409,5 +601,37 @@
                 bsAlert.close();
             });
         }, 5000);
+        
+        // Animation des cartes de livreurs
+        document.querySelectorAll('.deliveryguy-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Animation des éléments de quartier
+        document.querySelectorAll('.neighbourhood-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+        
+        // Animation des onglets au clic
+        document.querySelectorAll('.nav-link').forEach(tab => {
+            tab.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            });
+        });
     </script>
 {% endblock %}

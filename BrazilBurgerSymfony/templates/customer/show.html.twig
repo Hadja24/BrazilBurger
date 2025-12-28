@@ -7,521 +7,753 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        :root {
-            --brazil-green: #009739;
-            --brazil-yellow: #FEDD00;
-            --brazil-blue: #012169;
-            --brazil-white: #FFFFFF;
-            --brazil-gray: #F5F5F5;
-            --brazil-dark: #333333;
+        .dashboard-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: calc(100vh - 150px);
         }
         
         .dashboard-header {
-            background: linear-gradient(135deg, var(--brazil-blue), var(--brazil-green));
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.95), rgba(52, 73, 94, 0.95));
             color: white;
-            padding: 30px;
-            border-radius: 12px;
+            padding: 40px 0;
             margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e63946' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
         }
         
         .customer-avatar-large {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            background: white;
-            color: var(--brazil-blue);
+            background: linear-gradient(135deg, #e63946, #d32f2f);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 42px;
+            font-size: 48px;
             font-weight: bold;
-            margin-right: 20px;
+            margin-right: 30px;
+            box-shadow: 0 10px 25px rgba(230, 57, 70, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        
+        .customer-avatar-large:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(230, 57, 70, 0.4);
+        }
+        
+        .customer-info-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .customer-info-header p {
+            opacity: 0.9;
+            margin-bottom: 5px;
         }
         
         .stat-card {
-            background: var(--brazil-white);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 15px;
+            padding: 30px 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             text-align: center;
-            border-top: 5px solid var(--brazil-green);
+            border-top: 5px solid;
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #e63946, #f39c12);
+            opacity: 0;
             transition: all 0.3s ease;
         }
         
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+        
+        .stat-card:hover::before {
+            opacity: 1;
         }
         
         .stat-card i {
-            font-size: 32px;
-            color: var(--brazil-green);
-            margin-bottom: 15px;
+            font-size: 42px;
+            margin-bottom: 20px;
+            display: block;
+            opacity: 0.9;
         }
         
+        .stat-card.total-orders i { color: #e63946; }
+        .stat-card.total-spent i { color: #27ae60; }
+        .stat-card.pending-orders i { color: #f39c12; }
+        .stat-card.finished-orders i { color: #3498db; }
+        
         .stat-number {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--brazil-dark);
+            font-size: 42px;
+            font-weight: 800;
+            color: #2c3e50;
             display: block;
             line-height: 1;
+            margin-bottom: 10px;
         }
         
         .stat-label {
             font-size: 14px;
-            color: #666;
+            color: #636e72;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 10px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .info-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .info-title {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(44, 62, 80, 0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #e63946, #f39c12);
+        }
+        
+        .info-item {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .info-item:hover {
+            background: rgba(44, 62, 80, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .info-item i {
+            width: 30px;
+            color: #e63946;
+            font-size: 18px;
+            margin-top: 2px;
         }
         
         .orders-table {
-            background: var(--brazil-white);
-            border-radius: 12px;
+            background: white;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
         }
         
         .orders-table thead {
-            background: var(--brazil-green);
+            background: linear-gradient(135deg, #2c3e50, #34495e);
             color: white;
         }
         
         .orders-table th {
             border: none;
-            padding: 15px;
+            padding: 18px 20px;
             font-weight: 600;
-        }
-        
-        .orders-table td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-        }
-        
-        .state-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         
+        .orders-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            vertical-align: middle;
+            transition: all 0.3s ease;
+        }
+        
+        .orders-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        .orders-table tbody tr:hover {
+            background: rgba(44, 62, 80, 0.02);
+        }
+        
+        .orders-table tbody tr:hover td {
+            transform: translateX(5px);
+        }
+        
+        .state-badge {
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            min-width: 100px;
+            text-align: center;
+        }
+        
         .state-pending {
-            background: linear-gradient(135deg, #FFD166, #FFB347);
-            color: #8A5700;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
         }
         
         .state-cancelled {
-            background: linear-gradient(135deg, #EF476F, #FF6B6B);
+            background: linear-gradient(135deg, #e63946, #d32f2f);
             color: white;
         }
         
         .state-finished {
-            background: linear-gradient(135deg, #06D6A0, #0CB48A);
+            background: linear-gradient(135deg, #27ae60, #229954);
             color: white;
         }
         
         .btn-cancel-order {
-            background: linear-gradient(135deg, #EF476F, #FF6B6B);
+            background: linear-gradient(135deg, #e63946, #d32f2f);
             color: white;
-            border-radius: 20px;
-            padding: 6px 15px;
+            border-radius: 8px;
+            padding: 8px 15px;
             border: none;
             font-size: 12px;
             font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .btn-cancel-order:hover {
-            background: linear-gradient(135deg, #FF6B6B, #EF476F);
+            background: linear-gradient(135deg, #d32f2f, #e63946);
             transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
         }
         
         .no-orders {
             text-align: center;
-            padding: 50px;
-            color: #666;
+            padding: 60px 20px;
+            color: #636e72;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .no-orders i {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #e9ecef;
+            opacity: 0.5;
         }
         
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             flex-wrap: wrap;
+            margin-top: 30px;
+            position: relative;
+            z-index: 2;
         }
         
         .btn-dashboard {
-            border-radius: 25px;
-            padding: 10px 20px;
+            border-radius: 50px;
+            padding: 12px 25px;
             font-weight: 600;
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px;
         }
         
         .btn-back {
-            background: var(--brazil-gray);
-            color: var(--brazil-dark);
-            border: 2px solid var(--brazil-gray);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
         }
         
         .btn-back:hover {
-            background: transparent;
-            border-color: var(--brazil-dark);
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .btn-search-again {
-            background: linear-gradient(135deg, var(--brazil-blue), #1A3A8F);
+            background: linear-gradient(135deg, #e63946, #d32f2f);
             color: white;
             border: none;
         }
         
         .btn-search-again:hover {
-            background: linear-gradient(135deg, #1A3A8F, var(--brazil-blue));
+            background: linear-gradient(135deg, #d32f2f, #e63946);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
         }
         
-        .info-section {
-            background: var(--brazil-white);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+        .order-status-badge {
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
         }
         
-        .info-title {
-            color: var(--brazil-dark);
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--brazil-gray);
+        .bg-status-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            border: 1px solid rgba(243, 156, 18, 0.2);
         }
         
-        .info-item {
-            margin-bottom: 15px;
-            display: flex;
+        .bg-status-cancelled {
+            background: rgba(230, 57, 70, 0.1);
+            color: #e63946;
+            border: 1px solid rgba(230, 57, 70, 0.2);
+        }
+        
+        .bg-status-finished {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+        
+        .reception-badge {
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
             align-items: center;
-        }
-        
-        .info-item i {
-            width: 30px;
-            color: var(--brazil-green);
+            gap: 5px;
         }
         
         @media (max-width: 768px) {
             .customer-avatar-large {
-                width: 80px;
-                height: 80px;
-                font-size: 32px;
-                margin: 0 auto 15px;
+                width: 90px;
+                height: 90px;
+                font-size: 36px;
+                margin: 0 auto 20px;
             }
             
             .dashboard-header {
                 text-align: center;
-                padding: 20px;
+                padding: 30px 20px;
+            }
+            
+            .customer-info-header {
+                text-align: center;
             }
             
             .action-buttons {
                 justify-content: center;
+            }
+            
+            .btn-dashboard {
+                min-width: 150px;
+            }
+            
+            .stat-number {
+                font-size: 32px;
             }
         }
     </style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <!-- Header du dashboard -->
-    <div class="dashboard-header">
-        <div class="d-flex align-items-center flex-wrap">
-            <div class="customer-avatar-large">
-                {{ customer.name|first|upper }}{{ customer.surname|first|upper }}
-            </div>
-            <div>
-                <h1 class="mb-2">{{ customer.name }} {{ customer.surname }}</h1>
-                <p class="mb-1">
-                    <i class="fas fa-phone me-2"></i>
-                    {{ customer.phone }}
-                </p>
-                <p class="mb-0">
-                    <i class="fas fa-envelope me-2"></i>
-                    {{ customer.email }}
-                </p>
-            </div>
-        </div>
-        
-        <div class="action-buttons mt-4">
-            <a href="{{ path('app_customers_index') }}" class="btn btn-back btn-dashboard">
-                <i class="fas fa-arrow-left me-2"></i>
-                Retour à la liste
-            </a>
-            <a href="{{ path('app_customers_search') }}" class="btn btn-search-again btn-dashboard">
-                <i class="fas fa-search me-2"></i>
-                Rechercher un autre client
-            </a>
-        </div>
-    </div>
-    
-    <!-- Statistiques -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="stat-number">{{ stats.total_orders }}</span>
-                <span class="stat-label">Commandes totales</span>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <i class="fas fa-money-bill-wave"></i>
-                <span class="stat-number">{{ stats.total_spent|number_format(0, ',', ' ') }} FCFA</span>
-                <span class="stat-label">Total dépensé</span>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <i class="fas fa-clock"></i>
-                <span class="stat-number">{{ stats.pending_orders }}</span>
-                <span class="stat-label">Commandes en attente</span>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <i class="fas fa-check-circle"></i>
-                <span class="stat-number">{{ stats.finished_orders }}</span>
-                <span class="stat-label">Commandes terminées</span>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Informations client -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="info-section">
-                <h4 class="info-title">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Informations client
-                </h4>
-                <div class="info-item">
-                    <i class="fas fa-user"></i>
-                    <span><strong>Nom complet :</strong> {{ customer.name }} {{ customer.surname }}</span>
+<div class="dashboard-container">
+    <div class="container-fluid py-4">
+        <!-- Header du dashboard -->
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="d-flex align-items-center flex-wrap">
+                    <div class="customer-avatar-large">
+                        {{ customer.name|first|upper }}{{ customer.surname|first|upper }}
+                    </div>
+                    <div class="customer-info-header">
+                        <h1 class="mb-3">{{ customer.name }} {{ customer.surname }}</h1>
+                        <p class="mb-2">
+                            <i class="fas fa-phone me-2"></i>
+                            {{ customer.phone }}
+                        </p>
+                        <p class="mb-0">
+                            <i class="fas fa-envelope me-2"></i>
+                            {{ customer.email }}
+                        </p>
+                    </div>
                 </div>
-                <div class="info-item">
-                    <i class="fas fa-phone"></i>
-                    <span><strong>Téléphone :</strong> {{ customer.phone }}</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-envelope"></i>
-                    <span><strong>Email :</strong> {{ customer.email }}</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-calendar"></i>
-                    <span><strong>Client depuis :</strong> 
-                        {% if orders|length > 0 %}
-                            {% set firstOrder = orders|sort((a, b) => a.orderDate <=> b.orderDate)|first %}
-                            {{ firstOrder.orderDate|date('d/m/Y') }}
-                        {% else %}
-                            Pas encore de commande
-                        {% endif %}
-                    </span>
+                
+                <div class="action-buttons">
+                    <a href="{{ path('app_customers_index') }}" class="btn btn-back btn-dashboard">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Retour à la liste
+                    </a>
+                    <a href="{{ path('app_customers_search') }}" class="btn btn-search-again btn-dashboard">
+                        <i class="fas fa-search me-2"></i>
+                        Rechercher un autre client
+                    </a>
                 </div>
             </div>
         </div>
         
-        <!-- Dernières commandes (mini tableau) -->
-        <div class="col-md-8">
-            <div class="info-section">
-                <h4 class="info-title">
-                    <i class="fas fa-history me-2"></i>
-                    Dernières commandes
-                </h4>
-                {% if orders|length > 0 %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Date</th>
-                                    <th>Montant</th>
-                                    <th>Type</th>
-                                    <th>État</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for order in orders|slice(0, 5) %}
+        <!-- Statistiques -->
+        <div class="row g-4 mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card total-orders">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="stat-number">{{ stats.total_orders }}</span>
+                    <span class="stat-label">Commandes totales</span>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card total-spent">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span class="stat-number">{{ stats.total_spent|number_format(0, ',', ' ') }} FCFA</span>
+                    <span class="stat-label">Total dépensé</span>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card pending-orders">
+                    <i class="fas fa-clock"></i>
+                    <span class="stat-number">{{ stats.pending_orders }}</span>
+                    <span class="stat-label">En attente</span>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card finished-orders">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="stat-number">{{ stats.finished_orders }}</span>
+                    <span class="stat-label">Terminées</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Informations client -->
+        <div class="row mb-4">
+            <div class="col-lg-4">
+                <div class="info-section">
+                    <h4 class="info-title">
+                        <i class="fas fa-info-circle me-3"></i>
+                        Informations client
+                    </h4>
+                    <div class="info-item">
+                        <i class="fas fa-user"></i>
+                        <div>
+                            <strong>Nom complet</strong><br>
+                            <span>{{ customer.name }} {{ customer.surname }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <strong>Téléphone</strong><br>
+                            <span>{{ customer.phone }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email</strong><br>
+                            <span>{{ customer.email }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-calendar"></i>
+                        <div>
+                            <strong>Client depuis</strong><br>
+                            <span>
+                                {% if orders|length > 0 %}
+                                    {% set firstOrder = orders|sort((a, b) => a.orderDate <=> b.orderDate)|first %}
+                                    {{ firstOrder.orderDate|date('d/m/Y') }}
+                                {% else %}
+                                    Pas encore de commande
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dernières commandes (mini tableau) -->
+            <div class="col-lg-8">
+                <div class="info-section">
+                    <h4 class="info-title">
+                        <i class="fas fa-history me-3"></i>
+                        Dernières commandes
+                    </h4>
+                    {% if orders|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
                                     <tr>
-                                        <td>#{{ order.id }}</td>
-                                        <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
-                                        <td>{{ order.totalPrice|number_format(0, ',', ' ') }} FCFA</td>
-                                        <td>
-                                            {% if order.receptionType == 'DELIVERY' %}
-                                                <span class="state-badge state-pending">
-                                                    <i class="fas fa-truck me-1"></i>
-                                                    Livraison
-                                                </span>
-                                            {% elseif order.receptionType == 'PICK_UP' %}
-                                                <span class="state-badge state-cancelled">
-                                                    <i class="fas fa-bag me-1"></i>
-                                                    À emporter
-                                                </span>
-                                            {% else %}
-                                                <span class="state-badge state-finished">
-                                                    <i class="fas fa-shop me-1"></i>
-                                                    Sur place
-                                                </span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if order.orderState == 'PENDING' %}
-                                                <span class="badge bg-warning">En attente</span>
-                                            {% elseif order.orderState == 'CANCELLED' %}
-                                                <span class="badge bg-danger">Annulée</span>
-                                            {% elseif order.orderState == 'FINISHED' %}
-                                                <span class="badge bg-success">Terminée</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
+                                        <th>ID</th>
+                                        <th>Date</th>
+                                        <th>Montant</th>
+                                        <th>Type</th>
+                                        <th>État</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders|slice(0, 5) %}
+                                        <tr>
+                                            <td class="fw-bold">#{{ order.id }}</td>
+                                            <td>
+                                                <small class="text-muted">{{ order.orderDate|date('d/m/Y') }}</small><br>
+                                                <small>{{ order.orderDate|date('H:i') }}</small>
+                                            </td>
+                                            <td class="fw-bold text-success">
+                                                {{ order.totalPrice|number_format(0, ',', ' ') }} FCFA
+                                            </td>
+                                            <td>
+                                                {% if order.receptionType == 'DELIVERY' %}
+                                                    <span class="reception-badge bg-info bg-opacity-10 text-info">
+                                                        <i class="fas fa-truck me-1"></i>
+                                                        Livraison
+                                                    </span>
+                                                {% elseif order.receptionType == 'PICK_UP' %}
+                                                    <span class="reception-badge bg-warning bg-opacity-10 text-warning">
+                                                        <i class="fas fa-bag-shopping me-1"></i>
+                                                        À emporter
+                                                    </span>
+                                                {% else %}
+                                                    <span class="reception-badge bg-success bg-opacity-10 text-success">
+                                                        <i class="fas fa-utensils me-1"></i>
+                                                        Sur place
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if order.orderState == 'PENDING' %}
+                                                    <span class="order-status-badge bg-status-pending">
+                                                        <i class="fas fa-clock me-1"></i>
+                                                        En attente
+                                                    </span>
+                                                {% elseif order.orderState == 'CANCELLED' %}
+                                                    <span class="order-status-badge bg-status-cancelled">
+                                                        <i class="fas fa-times me-1"></i>
+                                                        Annulée
+                                                    </span>
+                                                {% elseif order.orderState == 'FINISHED' %}
+                                                    <span class="order-status-badge bg-status-finished">
+                                                        <i class="fas fa-check me-1"></i>
+                                                        Terminée
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-end">
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <a href="{{ path('app_orders_show', {'id': order.id}) }}" 
+                                                       class="btn btn-outline-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    {% if order.orderState == 'PENDING' %}
+                                                        <form method="POST" 
+                                                              action="{{ path('app_customers_cancel_order', {
+                                                                  'customerId': customer.id,
+                                                                  'orderId': order.id
+                                                              }) }}" 
+                                                              style="display: inline;"
+                                                              onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?')">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ order.id) }}">
+                                                            <button type="submit" class="btn btn-cancel-order">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </form>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if orders|length > 5 %}
+                            <div class="text-center mt-3 pt-3 border-top">
+                                <a href="#all-orders" class="btn btn-outline-secondary">
+                                    <i class="fas fa-list me-2"></i>
+                                    Voir toutes les commandes ({{ orders|length }})
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+                            <p class="text-muted">Ce client n'a pas encore passé de commande.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Toutes les commandes -->
+        <div class="info-section" id="all-orders">
+            <h4 class="info-title">
+                <i class="fas fa-list-alt me-3"></i>
+                Historique des commandes
+                <span class="badge bg-primary ms-2">{{ orders|length }}</span>
+            </h4>
+            
+            {% if orders|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table orders-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Montant</th>
+                                <th>Type</th>
+                                <th>État</th>
+                                <th>Livraison</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td class="fw-bold">#{{ order.id }}</td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <small class="text-muted">{{ order.orderDate|date('d/m/Y') }}</small>
+                                            <span>{{ order.orderDate|date('H:i') }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold text-success">
+                                            {{ order.totalPrice|number_format(0, ',', ' ') }} FCFA
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if order.receptionType == 'DELIVERY' %}
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-truck me-1"></i>
+                                                Livraison
+                                            </span>
+                                        {% elseif order.receptionType == 'PICK_UP' %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-bag-shopping me-1"></i>
+                                                À emporter
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-utensils me-1"></i>
+                                                Sur place
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if order.orderState == 'PENDING' %}
+                                            <span class="order-status-badge bg-status-pending">
+                                                <i class="fas fa-clock me-1"></i>
+                                                En attente
+                                            </span>
+                                        {% elseif order.orderState == 'CANCELLED' %}
+                                            <span class="order-status-badge bg-status-cancelled">
+                                                <i class="fas fa-times me-1"></i>
+                                                Annulée
+                                            </span>
+                                        {% elseif order.orderState == 'FINISHED' %}
+                                            <span class="order-status-badge bg-status-finished">
+                                                <i class="fas fa-check me-1"></i>
+                                                Terminée
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if order.deliveryStatus %}
+                                            <span class="badge bg-secondary">
+                                                {{ order.deliveryStatus }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group btn-group-sm" role="group">
                                             <a href="{{ path('app_orders_show', {'id': order.id}) }}" 
-                                               class="btn btn-sm btn-outline-primary">
+                                               class="btn btn-outline-primary">
                                                 <i class="fas fa-eye"></i>
                                             </a>
+                
                                             {% if order.orderState == 'PENDING' %}
                                                 <form method="POST" 
                                                       action="{{ path('app_customers_cancel_order', {
                                                           'customerId': customer.id,
                                                           'orderId': order.id
                                                       }) }}" 
-                                                      style="display: inline;"
-                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?')">
+                                                      style="display: inline;">
                                                     <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ order.id) }}">
-                                                    <button type="submit" class="btn btn-sm btn-cancel-order">
+                                                    <button type="submit" 
+                                                            class="btn btn-cancel-order"
+                                                            onclick="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?')">
                                                         <i class="fas fa-times"></i>
-                                                        Annuler
                                                     </button>
                                                 </form>
                                             {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% if orders|length > 5 %}
-                        <div class="text-center mt-3">
-                            <a href="#all-orders" class="btn btn-outline-secondary">
-                                Voir toutes les commandes ({{ orders|length }})
-                            </a>
-                        </div>
-                    {% endif %}
-                {% else %}
-                    <div class="text-center py-4">
-                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
-                        <p class="text-muted">Ce client n'a pas encore passé de commande.</p>
-                    </div>
-                {% endif %}
-            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="no-orders">
+                    <i class="fas fa-shopping-cart fa-4x mb-3"></i>
+                    <h4 class="text-muted">Aucune commande trouvée</h4>
+                    <p class="text-muted mb-4">Ce client n'a pas encore passé de commande chez Brazil Burger.</p>
+                    <a href="{{ path('app_catalogue') }}" class="btn btn-primary px-4">
+                        <i class="fas fa-shopping-cart me-2"></i>
+                        Voir le catalogue
+                    </a>
+                </div>
+            {% endif %}
         </div>
-    </div>
-    
-    <!-- Toutes les commandes -->
-    <div class="info-section" id="all-orders">
-        <h4 class="info-title">
-            <i class="fas fa-list-alt me-2"></i>
-            Toutes les commandes ({{ orders|length }})
-        </h4>
-        
-        {% if orders|length > 0 %}
-            <div class="table-responsive">
-                <table class="table orders-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Date</th>
-                            <th>Montant</th>
-                            <th>Type</th>
-                            <th>État</th>
-                            <th>Livraison</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in orders %}
-                            <tr>
-                                <td class="fw-bold">#{{ order.id }}</td>
-                                <td>{{ order.orderDate|date('d/m/Y H:i') }}</td>
-                                <td class="fw-bold text-success">
-                                    {{ order.totalPrice|number_format(0, ',', ' ') }} FCFA
-                                </td>
-                                <td>
-                                    {% if order.receptionType == 'DELIVERY' %}
-                                        <span class="badge bg-info">
-                                            <i class="fas fa-truck me-1"></i>
-                                            Livraison
-                                        </span>
-                                    {% elseif order.receptionType == 'PICK_UP' %}
-                                        <span class="badge bg-warning text-dark">
-                                            <i class="fas fa-bag-shopping me-1"></i>
-                                            À emporter
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-success">
-                                            <i class="fas fa-utensils me-1"></i>
-                                            Sur place
-                                        </span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if order.orderState == 'PENDING' %}
-                                        <span class="badge bg-warning">En attente</span>
-                                    {% elseif order.orderState == 'CANCELLED' %}
-                                        <span class="badge bg-danger">Annulée</span>
-                                    {% elseif order.orderState == 'FINISHED' %}
-                                        <span class="badge bg-success">Terminée</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if order.deliveryStatus %}
-                                        <span class="badge bg-secondary">
-                                            {{ order.deliveryStatus }}
-                                        </span>
-                                    {% else %}
-                                        <span class="text-muted">N/A</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ path('app_orders_show', {'id': order.id}) }}" 
-                                           class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                
-                                        {% if order.orderState == 'PENDING' %}
-                                            <form method="POST" 
-                                                  action="{{ path('app_customers_cancel_order', {
-                                                      'customerId': customer.id,
-                                                      'orderId': order.id
-                                                  }) }}" 
-                                                  style="display: inline;">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ order.id) }}">
-                                                <button type="submit" 
-                                                        class="btn btn-sm btn-cancel-order"
-                                                        onclick="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?')">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
-                                            </form>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="no-orders">
-                <i class="fas fa-shopping-cart fa-4x mb-3 text-muted"></i>
-                <h4 class="text-muted">Aucune commande trouvée</h4>
-                <p class="text-muted">Ce client n'a pas encore passé de commande chez Brazil Burger.</p>
-            </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}
@@ -532,11 +764,22 @@
         // Animation des cartes de statistiques
         document.querySelectorAll('.stat-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
+                this.style.transform = 'translateY(-8px)';
             });
             
             card.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Animation des info items
+        document.querySelectorAll('.info-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
             });
         });
         
@@ -560,10 +803,39 @@
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     window.scrollTo({
-                        top: targetElement.offsetTop - 20,
+                        top: targetElement.offsetTop - 100,
                         behavior: 'smooth'
                     });
                 }
+            });
+        });
+        
+        // Animation d'apparition progressive
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation des cartes de statistiques
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // Animation des table rows
+            const tableRows = document.querySelectorAll('.orders-table tbody tr');
+            tableRows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(20px)';
+                
+                setTimeout(() => {
+                    row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, index * 50);
             });
         });
     </script>
